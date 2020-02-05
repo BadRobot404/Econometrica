@@ -4,6 +4,9 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>model.Country</class>
     <class>model.CountryDataset</class>
+    <class>model.CountryData</class>
+    <class>model.CurrentGdp</class>
+    <class>model.CurrentOilData</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/econometricaDB"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
