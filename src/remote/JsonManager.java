@@ -27,9 +27,9 @@ import java.util.List;
 
 public class JsonManager
 {
-    public static final String baseURL = "https://www.quandl.com/api/v3/datasets/WWDI/GRC_NY_GDP_MKTP_CN.json?api_key=f3uK5mxjS8rPxPFyJ8fy";
     
-    /*Το είδος του ερωτήματος API*/
+    
+    
                 
     private static String apiKey;
     
@@ -43,10 +43,9 @@ public class JsonManager
     public CountryDataset fetchGDP(String isoCode)
     {
         CountryDataset cd = new CountryDataset();
-        ControllerCountryDataset ctCountryDataset = new ControllerCountryDataset();
+        
         Country ct = new Country();
-        ControllerCountry ctController = new ControllerCountry();
-        ControllerCountryData ctData = new ControllerCountryData();
+        
         List<CountryData> listCountryData = new ArrayList<CountryData>();
         List<CurrentGdp> listCurrentGdp = new ArrayList<CurrentGdp>();
         ControllerCurrentGDP controllerGDP = new ControllerCurrentGDP();
@@ -69,9 +68,7 @@ public class JsonManager
             
             /*εμείς γνωρίζουμε οτι είναι ένα JsonObject οπότε το αποθηκεύουμε σε μια αναφορά mainJsonObject*/   
             JsonObject mainJsonObject = jElement.getAsJsonObject(); 
-            
-            /*Κρατάμε και ένα προσωρινό αντικείμενο για JsonObject για να γίνονται λιγότερες κλήσεις με λιγότερο κώδικα*/
-            JsonObject jsonObject;
+                   
             
                                 
             
@@ -88,14 +85,15 @@ public class JsonManager
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
 
-             
+             //Parse Dataset entries
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
-
+                 //Parse Country Data entry
                  CountryData cData = new CountryData();
                  cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cData.setValue(e.getAsJsonArray().get(1).getAsString());    
                  cData.setDataset(cd);
                  listCountryData.add(cData);
+                 //Update table that stores current GDP
                  CurrentGdp cGdp = new CurrentGdp();
                  cGdp.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cGdp.setValue(e.getAsJsonArray().get(1).getAsString());
@@ -103,11 +101,9 @@ public class JsonManager
                  
              }
              
-                        
-             for (CurrentGdp cc : listCurrentGdp){
-                 System.out.println(cc.getDataYear() + " " + cc.getValue());
-             }
+             //Delete all entries in table currentGDP  
              controllerGDP.deleteData();
+             //Commint new data to table CurrentGDP
              controllerGDP.addCurrentGdp(listCurrentGdp);
             
             } 
@@ -127,10 +123,8 @@ public class JsonManager
 public CountryDataset fetchOil(String isoCode)
     {
         CountryDataset cd = new CountryDataset();
-        ControllerCountryDataset ctCountryDataset = new ControllerCountryDataset();
         Country ct = new Country();
-        ControllerCountry ctController = new ControllerCountry();
-        ControllerCountryData ctData = new ControllerCountryData();
+        
         List<CountryData> listCountryData = new ArrayList<CountryData>();
         List<CurrentOilData> listCurrentOil = new ArrayList<CurrentOilData>();
         ControllerCurrentOilData controllerOil = new ControllerCurrentOilData();
@@ -153,8 +147,7 @@ public CountryDataset fetchOil(String isoCode)
             /*εμείς γνωρίζουμε οτι είναι ένα JsonObject οπότε το αποθηκεύουμε σε μια αναφορά mainJsonObject*/   
             JsonObject mainJsonObject = jElement.getAsJsonObject(); 
             
-            /*Κρατάμε και ένα προσωρινό αντικείμενο για JsonObject για να γίνονται λιγότερες κλήσεις με λιγότερο κώδικα*/
-            JsonObject jsonObject;
+            
             
                        
             
@@ -173,26 +166,25 @@ public CountryDataset fetchOil(String isoCode)
              
              
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
-
+                //Parse Data entry 
                  CountryData cData = new CountryData();
                  cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cData.setValue(e.getAsJsonArray().get(1).getAsString());    
                  cData.setDataset(cd);
                  listCountryData.add(cData);
+                 //Update Table Current Oil
                  CurrentOilData cOil = new CurrentOilData();
                  cOil.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cOil.setValue(e.getAsJsonArray().get(1).getAsString());
                  listCurrentOil.add(cOil);
              }
              
-            for (CurrentOilData cc : listCurrentOil){
-                 System.out.println(cc.getDataYear() + " " + cc.getValue());
-             }
+             //Delete all entries in Table Current Oil
              controllerOil.deleteData();
+             //Commit new Data to table Current Oil
              controllerOil.addCurrentGdp(listCurrentOil);            
                           
-             
-             
+              
              
             
             } 

@@ -7,6 +7,7 @@
 package econometrica;
 
 import View.MainGui;
+import controller.*;
 
 
 public class Econometrica {
@@ -43,6 +44,12 @@ public class Econometrica {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
+                ControllerCurrentGDP controllerCurrentGDP = new ControllerCurrentGDP();
+                controllerCurrentGDP.deleteData();
+                
+                ControllerCurrentOilData controllerCurrentOil = new ControllerCurrentOilData();
+                controllerCurrentOil.deleteData();
                 
                 new MainGui().setVisible(true);
             }
