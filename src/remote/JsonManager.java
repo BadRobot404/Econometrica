@@ -1,5 +1,5 @@
 package remote;
-/*Κλάση κλήσης API του openweathermap και διαχείρησης δομής δεδομένων JSON*/
+/*Κλάση κλήσης API του quandl και διαχείρησης δομής δεδομένων JSON*/
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -32,14 +32,14 @@ public class JsonManager
     /*Το είδος του ερωτήματος API*/
                 
     private static String apiKey;
-    private static String units;
+    
     
     public JsonManager()
     {
         this.apiKey = "f3uK5mxjS8rPxPFyJ8fy";
     }
     
-    /*Επιστρέφει τον καιρό τώρα για μια πόλη*/
+    /*Επιστρέφει τα στοιχεία για το ΑΕΠ χώρα*/
     public CountryDataset fetchGDP(String isoCode)
     {
         CountryDataset cd = new CountryDataset();
@@ -51,10 +51,11 @@ public class JsonManager
         List<CurrentGdp> listCurrentGdp = new ArrayList<CurrentGdp>();
         ControllerCurrentGDP controllerGDP = new ControllerCurrentGDP();
         
+        
         try
         {
             /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
-            URL url = new URL(createUrlString(isoCode));
+            URL url = new URL(createUrlString(isoCode,"GDP"));
             
             /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
             InputStream is = url.openStream(); 
@@ -86,13 +87,10 @@ public class JsonManager
              // Parse the Description
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
-             //ctCountryDataset.addCountryDataset(cd);
+
              
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
-//                 System.out.println(cd.getDatasetId());
-//                 System.out.println(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
-//                 System.out.println(e.getAsJsonArray().get(1).getAsString());
-//                 System.out.println("------------------");
+
                  CountryData cData = new CountryData();
                  cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cData.setValue(e.getAsJsonArray().get(1).getAsString());    
@@ -104,16 +102,13 @@ public class JsonManager
                  listCurrentGdp.add(cGdp);
                  
              }
-             //ctData.addCountryData(listCountryData);
+             
                         
              for (CurrentGdp cc : listCurrentGdp){
                  System.out.println(cc.getDataYear() + " " + cc.getValue());
              }
              controllerGDP.deleteData();
              controllerGDP.addCurrentGdp(listCurrentGdp);
-             
-             
-             
             
             } 
         catch (MalformedURLException ex)
@@ -125,54 +120,11 @@ public class JsonManager
             Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-//            //parse dt
-//            wn.getWeatherNowPK().setDt(new Date(mainJsonObject.get("dt").getAsLong()*1000));
-//            
-//            //parse id
-//            wn.getWeatherNowPK().setCityId(mainJsonObject.get("id").getAsInt());
-//            wn.setCity(new ControllerCity().findCityByCityId(mainJsonObject.get("id").getAsInt()));
-//            
-//            //parse {main}->temp
-//            jsonObject = mainJsonObject.getAsJsonObject("main");
-//            wn.setMaintemp(jsonObject.get("temp").getAsDouble());
-//
-//            //parse [weather]->{0}->id , [weather]->{0}->icon
-//            jsonObject = mainJsonObject.getAsJsonArray("weather").get(0).getAsJsonObject();          
-//            /*ερώτημα στον πίνακα WeatherDesc ώστε να φέρει στον Entity Manager την περιγραφή του καιρού στα ελληνικά*/
-//            wn.setWeatherDescId(new ControllerWeatherDesc().findWeatherDescById(jsonObject.get("id").getAsInt()));
-//            wn.setIcon(jsonObject.get("icon").getAsString());
-//            
-//            //parse {wind}->speed
-//            jsonObject = mainJsonObject.getAsJsonObject("wind");
-//            wn.setWindspeed(jsonObject.get("speed").getAsDouble());
-//            
-//            //parse {clouds}->all
-//            jsonObject = mainJsonObject.getAsJsonObject("clouds");
-//            wn.setCloudsall(jsonObject.get("all").getAsDouble());
-//            
-//            //parse {rain}->3h
-//            jsonObject = mainJsonObject.getAsJsonObject("rain");
-//            if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει βροχή
-//            {
-//                if (jsonObject.get("3h") != null)
-//                    wn.setRain(jsonObject.get("3h").getAsDouble());
-//            }
-//            
-//            //parse {snow}->3h
-//            jsonObject = mainJsonObject.getAsJsonObject("snow");
-//            if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει χιόνι
-//            {
-//                if (jsonObject.get("3h") != null)
-//                    wn.setSnow(jsonObject.get("3h").getAsDouble());
-//            }
-//        
-//        
-//        return wn;
-        
+
         return cd;
     }
 
-public CountryDataset fetchOil()
+public CountryDataset fetchOil(String isoCode)
     {
         CountryDataset cd = new CountryDataset();
         ControllerCountryDataset ctCountryDataset = new ControllerCountryDataset();
@@ -180,11 +132,13 @@ public CountryDataset fetchOil()
         ControllerCountry ctController = new ControllerCountry();
         ControllerCountryData ctData = new ControllerCountryData();
         List<CountryData> listCountryData = new ArrayList<CountryData>();
+        List<CurrentOilData> listCurrentOil = new ArrayList<CurrentOilData>();
+        ControllerCurrentOilData controllerOil = new ControllerCurrentOilData();
         
         try
         {
             /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
-            URL url = new URL("https://www.quandl.com/api/v3/datasets/BP/OIL_CONSUM_GRC.json?api_key=f3uK5mxjS8rPxPFyJ8fy");
+            URL url = new URL(createUrlString(isoCode,"Oil"));
             
             /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
             InputStream is = url.openStream(); 
@@ -202,13 +156,7 @@ public CountryDataset fetchOil()
             /*Κρατάμε και ένα προσωρινό αντικείμενο για JsonObject για να γίνονται λιγότερες κλήσεις με λιγότερο κώδικα*/
             JsonObject jsonObject;
             
-            ct.setIsoCode("300");
-            ct.setName("Greece");
-            
-            if(!ctController.isInTheDatabase(ct)){
-               // ctController.addCountry(ct);
-            }
-            
+                       
             
              mainJsonObject = mainJsonObject.get("dataset").getAsJsonObject();
              //Parse the name of the dataset
@@ -222,21 +170,26 @@ public CountryDataset fetchOil()
              // Parse the Description
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
-             ctCountryDataset.addCountryDataset(cd);
+             
              
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
-//                 System.out.println(cd.getDatasetId());
-//                 System.out.println(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
-//                 System.out.println(e.getAsJsonArray().get(1).getAsString());
-//                 System.out.println("------------------");
+
                  CountryData cData = new CountryData();
                  cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cData.setValue(e.getAsJsonArray().get(1).getAsString());    
                  cData.setDataset(cd);
                  listCountryData.add(cData);
+                 CurrentOilData cOil = new CurrentOilData();
+                 cOil.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
+                 cOil.setValue(e.getAsJsonArray().get(1).getAsString());
+                 listCurrentOil.add(cOil);
              }
-             ctData.addCountryData(listCountryData);
-                        
+             
+            for (CurrentOilData cc : listCurrentOil){
+                 System.out.println(cc.getDataYear() + " " + cc.getValue());
+             }
+             controllerOil.deleteData();
+             controllerOil.addCurrentGdp(listCurrentOil);            
                           
              
              
@@ -252,137 +205,25 @@ public CountryDataset fetchOil()
             Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-//            //parse dt
-//            wn.getWeatherNowPK().setDt(new Date(mainJsonObject.get("dt").getAsLong()*1000));
-//            
-//            //parse id
-//            wn.getWeatherNowPK().setCityId(mainJsonObject.get("id").getAsInt());
-//            wn.setCity(new ControllerCity().findCityByCityId(mainJsonObject.get("id").getAsInt()));
-//            
-//            //parse {main}->temp
-//            jsonObject = mainJsonObject.getAsJsonObject("main");
-//            wn.setMaintemp(jsonObject.get("temp").getAsDouble());
-//
-//            //parse [weather]->{0}->id , [weather]->{0}->icon
-//            jsonObject = mainJsonObject.getAsJsonArray("weather").get(0).getAsJsonObject();          
-//            /*ερώτημα στον πίνακα WeatherDesc ώστε να φέρει στον Entity Manager την περιγραφή του καιρού στα ελληνικά*/
-//            wn.setWeatherDescId(new ControllerWeatherDesc().findWeatherDescById(jsonObject.get("id").getAsInt()));
-//            wn.setIcon(jsonObject.get("icon").getAsString());
-//            
-//            //parse {wind}->speed
-//            jsonObject = mainJsonObject.getAsJsonObject("wind");
-//            wn.setWindspeed(jsonObject.get("speed").getAsDouble());
-//            
-//            //parse {clouds}->all
-//            jsonObject = mainJsonObject.getAsJsonObject("clouds");
-//            wn.setCloudsall(jsonObject.get("all").getAsDouble());
-//            
-//            //parse {rain}->3h
-//            jsonObject = mainJsonObject.getAsJsonObject("rain");
-//            if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει βροχή
-//            {
-//                if (jsonObject.get("3h") != null)
-//                    wn.setRain(jsonObject.get("3h").getAsDouble());
-//            }
-//            
-//            //parse {snow}->3h
-//            jsonObject = mainJsonObject.getAsJsonObject("snow");
-//            if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει χιόνι
-//            {
-//                if (jsonObject.get("3h") != null)
-//                    wn.setSnow(jsonObject.get("3h").getAsDouble());
-//            }
-//        
-//        
-//        return wn;
+
         
         return cd;
     }
         
-    /*Επιστρέφει λίστα με 40 προβλέψεις για 5 ημέρες μιας πόλης*/
-//    public ArrayList<Forecast> fetchForecasts(int cityId)
-//    {
-//        ArrayList<Forecast> forecasts = new ArrayList<Forecast>();
-//        
-//        try
-//        {
-//            URL url = new URL(createUrlString(cityId,REQUEST_TYPE.FORECAST));
-//            InputStream is = url.openStream();                    
-//            InputStreamReader isr = new InputStreamReader(is); 
-//            
-//            JsonElement jElement = new JsonParser().parse(isr);
-//            JsonObject mainJsonObject = jElement.getAsJsonObject();
-//                                                                  
-//            JsonObject jsonObject;
-//            JsonObject jsonObjectListItem; 
-//            
-//            int cnt = mainJsonObject.get("cnt").getAsInt();
-//                    
-//            for(int i=0; i<cnt; i++)
-//            {
-//                Forecast forecast = new Forecast();
-//                forecast.setForecastPK(new ForecastPK());
-//                jsonObjectListItem = mainJsonObject.getAsJsonArray("list").get(i).getAsJsonObject();
-//                //parse temp
-//                
-//                jsonObject = jsonObjectListItem.getAsJsonObject("main");
-//                forecast.setMaintemp(jsonObject.get("temp").getAsDouble());
-//                
-//                //parse descid and parse icon
-//                jsonObject = jsonObjectListItem.getAsJsonArray("weather").get(0).getAsJsonObject();
-//                forecast.setWeatherDescId(new ControllerWeatherDesc().findWeatherDescById(jsonObject.get("id").getAsInt()));
-//                forecast.setIcon(jsonObject.get("icon").getAsString());
-//                
-//                //parse clouds
-//                jsonObject = jsonObjectListItem.getAsJsonObject("clouds");
-//                forecast.setCloudsall(jsonObject.get("all").getAsDouble());
-//                
-//                 //parse windspeed
-//                jsonObject = jsonObjectListItem.getAsJsonObject("wind");
-//                forecast.setWindspeed(jsonObject.get("speed").getAsDouble());
-//                
-//                //parse dt
-//                forecast.getForecastPK().setDt(new Date(jsonObjectListItem.get("dt").getAsLong()*1000));
-//                
-//                //parse cityid
-//                jsonObject = mainJsonObject.getAsJsonObject("city");
-//                forecast.getForecastPK().setCityId(jsonObject.get("id").getAsInt());
-//                forecast.setCity(new ControllerCity().findCityByCityId(jsonObject.get("id").getAsInt()));
-//                
-//                //parse rain
-//                jsonObject = jsonObjectListItem.getAsJsonObject("rain");
-//                if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει βροχή
-//                {
-//                    if (jsonObject.get("3h") != null)
-//                        forecast.setRain(jsonObject.get("3h").getAsDouble());
-//                }
-//                 
-//                 //parse snow
-//                jsonObject = jsonObjectListItem.getAsJsonObject("snow");
-//                if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει χιόνι
-//                {
-//                    if (jsonObject.get("3h") != null)
-//                        forecast.setSnow(jsonObject.get("3h").getAsDouble());
-//                }
-//                forecasts.add(forecast);
-//            }
-//        } 
-//        catch (MalformedURLException ex)
-//        {
-//            Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
-//        } 
-//        catch (IOException ex)
-//        {
-//            Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return forecasts;
-//    }
-    
+   
     /*Κατασκευή κατάλληλου URL String για το API Request*/
-    private String createUrlString(String isoCode)
+    private String createUrlString(String isoCode,String type)
     {
-        String prefix = "https://www.quandl.com/api/v3/datasets/WWDI/";
-        String postfix = "_NY_GDP_MKTP_CN.json?api_key=";
+        String prefix = "";
+        String postfix = "";
+        if(type.equals("GDP")){
+            prefix = "https://www.quandl.com/api/v3/datasets/WWDI/";
+            postfix = "_NY_GDP_MKTP_CN.json?api_key=";
+        }else if(type.equals("Oil")){
+            prefix = "https://www.quandl.com/api/v3/datasets/BP/OIL_CONSUM_";
+            postfix = ".json?api_key=";
+        }
+        
         String request = prefix + isoCode + postfix + apiKey;
         
         return (request);
@@ -398,13 +239,5 @@ public CountryDataset fetchOil()
         return apiKey;
     }
     
-    public static void setUnits(String _units)
-    {
-        units = _units;
-    }
     
-    public static String getUnits()
-    {
-        return units;
-    }
 }

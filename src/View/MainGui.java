@@ -64,6 +64,10 @@ public class MainGui extends javax.swing.JFrame {
         EconometricaPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("EconometricaPU").createEntityManager();
         countryQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM Country c");
         countryList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryQuery.getResultList();
+        currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
+        currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
+        currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
+        currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
         countrySelector = new javax.swing.JComboBox<>();
         jButtonFetch = new javax.swing.JButton();
@@ -225,6 +229,15 @@ public class MainGui extends javax.swing.JFrame {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 150));
 
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+        columnBinding.setColumnName("Data Year");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+        columnBinding.setColumnName("Value");
+        columnBinding.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
         jScrollPane1.setViewportView(jTableOil);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -310,6 +323,16 @@ public class MainGui extends javax.swing.JFrame {
         jPanel4.add(jLabel17, gridBagConstraints);
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 150));
+
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+        columnBinding.setColumnName("Data Year");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+        columnBinding.setColumnName("Value");
+        columnBinding.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
         jScrollPane2.setViewportView(jTableGDP);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -387,12 +410,40 @@ public class MainGui extends javax.swing.JFrame {
             ControllerCountryDataset cdController  = new ControllerCountryDataset();
             Country currentCountry = new Country();
             currentCountry = (Country) countrySelector.getSelectedItem();
-            if(!cdController.isInTheDatabase(currentCountry)){
-                JsonManager jm = new JsonManager();
-                jm.fetchGDP(currentCountry.getIsoCode());
+            //Check if data exists in the database
+            if(!cdController.isInTheDatabase(currentCountry)){//in case they don't exist
+                JsonManager jm = new JsonManager();//Make the Api calls
+                jm.fetchGDP(currentCountry.getIsoCode());//Get the GDP data
+                
+                //Update jTable in UI
+                currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
+                currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
+                org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
+                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+                columnBinding.setColumnName("Data Year");
+                columnBinding.setColumnClass(String.class);
+                columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+                columnBinding.setColumnName("Value");
+                columnBinding.setColumnClass(String.class);
+                bindingGroup.addBinding(jTableBinding);
+                jTableBinding.bind();
                 
                 
-                //model.fireTableDataChanged();
+                
+                jm.fetchOil(currentCountry.getIsoCode());//Get the Oil Data
+                //Update jTable in UI
+                currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
+                currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
+                org.jdesktop.swingbinding.JTableBinding jTableBinding1 = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
+                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+                columnBinding1.setColumnName("Data Year");
+                columnBinding1.setColumnClass(String.class);
+                columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+                columnBinding1.setColumnName("Value");
+                columnBinding1.setColumnClass(String.class);
+                bindingGroup.addBinding(jTableBinding1);
+                jTableBinding1.bind();
+                
             }
         }
     }//GEN-LAST:event_jButtonFetchActionPerformed
@@ -438,6 +489,10 @@ public class MainGui extends javax.swing.JFrame {
     private java.util.List<model.Country> countryList;
     private javax.persistence.Query countryQuery;
     private javax.swing.JComboBox<String> countrySelector;
+    private java.util.List<model.CurrentGdp> currentGdpList;
+    private javax.persistence.Query currentGdpQuery;
+    private java.util.List<model.CurrentOilData> currentOilDataList;
+    private javax.persistence.Query currentOilDataQuery;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
