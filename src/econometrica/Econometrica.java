@@ -1,7 +1,7 @@
 /** 
  * Τμήμα ΗΛΕ 43
  * @author ΒΑΣΙΛΗΣ ΤΣΑΠΑΡΙΚΟΣ - 114307
- * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛΟΒΕΝΤΗ - 126971
+ * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛEΒΕΝΤΗ - 126971
  * @author ΑΡΙΣΤΕΙΔΗΣ ΦΑΣΟΥΛΑΣ - 100318
  */
 package econometrica;
@@ -16,8 +16,12 @@ public class Econometrica {
      */
     public static void main(String[] args) {
         
-       JsonManager jm = new JsonManager();
-        jm.fetchGDP();
+       //JsonManager jm = new JsonManager();
+       //jm.fetchGDP();
+       //jm.fetchOil();
+        
+        ControllerCountry cc = new ControllerCountry();
+        
     
 // TODO code application logic here
     }

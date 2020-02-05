@@ -4,8 +4,6 @@ package remote;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import controller.ControllerCountry;
-import controller.ControllerCountryDataset;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,15 +13,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Country;
-import model.CountryDataset;
+import model.*;
+import controller.*;
+import java.util.List;
 
 
-/**
- *   @ Νικήτογλου Ελευθέριος - std100152@ac.eap.gr
- *   @ Ρούσσου Άννα - std114276@ac.eap.gr   
- *   @ Σιδηρόπουλος Κωνσταντίνος - std114284@ac.eap.gr
- *   @ Τμήμα ΘΕΣ-2 2017-18
+/** 
+ * Τμήμα ΗΛΕ 43
+ * @author ΒΑΣΙΛΗΣ ΤΣΑΠΑΡΙΚΟΣ - 114307
+ * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛEΒΕΝΤΗ - 126971
+ * @author ΑΡΙΣΤΕΙΔΗΣ ΦΑΣΟΥΛΑΣ - 100318
  */
 
 public class JsonManager
@@ -46,7 +45,8 @@ public class JsonManager
         ControllerCountryDataset ctCountryDataset = new ControllerCountryDataset();
         Country ct = new Country();
         ControllerCountry ctController = new ControllerCountry();
-       
+        ControllerCountryData ctData = new ControllerCountryData();
+        List<CountryData> listCountryData = new ArrayList<CountryData>();
         
         try
         {
@@ -71,7 +71,11 @@ public class JsonManager
             
             ct.setIsoCode("300");
             ct.setName("Greece");
-            //ctController.addCountry(ct);
+            
+            if(!ctController.isInTheDatabase(ct)){
+                ctController.addCountry(ct);
+            }
+            
             
              mainJsonObject = mainJsonObject.get("dataset").getAsJsonObject();
              //Parse the name of the dataset
@@ -85,17 +89,23 @@ public class JsonManager
              // Parse the Description
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
+             //ctCountryDataset.addCountryDataset(cd);
              
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
-                 System.out.println(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
-                 System.out.println(e.getAsJsonArray().get(1).getAsDouble());
+//                 System.out.println(cd.getDatasetId());
+//                 System.out.println(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
+//                 System.out.println(e.getAsJsonArray().get(1).getAsString());
+//                 System.out.println("------------------");
+                 CountryData cData = new CountryData();
+                 cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
+                 cData.setValue(e.getAsJsonArray().get(1).getAsString());    
+                 cData.setDataset(cd);
+                 listCountryData.add(cData);
              }
-             
-             ctCountryDataset.addCountryDataset(cd);
+             //ctData.addCountryData(listCountryData);
+                        
                           
-             System.out.println(cd.getName());
-             System.out.println(cd.getCountryCode().getIsoCode());
-             System.out.println(cd.getDatasetId());
+             
              
              
             
@@ -155,7 +165,134 @@ public class JsonManager
         
         return cd;
     }
-    
+
+public CountryDataset fetchOil()
+    {
+        CountryDataset cd = new CountryDataset();
+        ControllerCountryDataset ctCountryDataset = new ControllerCountryDataset();
+        Country ct = new Country();
+        ControllerCountry ctController = new ControllerCountry();
+        ControllerCountryData ctData = new ControllerCountryData();
+        List<CountryData> listCountryData = new ArrayList<CountryData>();
+        
+        try
+        {
+            /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
+            URL url = new URL("https://www.quandl.com/api/v3/datasets/BP/OIL_CONSUM_GRC.json?api_key=f3uK5mxjS8rPxPFyJ8fy");
+            
+            /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
+            InputStream is = url.openStream(); 
+            
+            /*Διαβάζει τη ροή και μετατρέπει τα εισερχόμενα bytes σε χαρακτήρες.*/
+            InputStreamReader isr = new InputStreamReader(is);                              
+            
+            /*Αναλύει την αρχική δομή του json που βρίσκεται στο isr, και επιστρέφει ένα JsonElement το οποίο μπορεί να είναι
+            ένα  JsonObject, JsonArray, JsonPrimitive ή ένα JsonNull.*/
+            JsonElement jElement = new JsonParser().parse(isr);
+            
+            /*εμείς γνωρίζουμε οτι είναι ένα JsonObject οπότε το αποθηκεύουμε σε μια αναφορά mainJsonObject*/   
+            JsonObject mainJsonObject = jElement.getAsJsonObject(); 
+            
+            /*Κρατάμε και ένα προσωρινό αντικείμενο για JsonObject για να γίνονται λιγότερες κλήσεις με λιγότερο κώδικα*/
+            JsonObject jsonObject;
+            
+            ct.setIsoCode("300");
+            ct.setName("Greece");
+            
+            if(!ctController.isInTheDatabase(ct)){
+               // ctController.addCountry(ct);
+            }
+            
+            
+             mainJsonObject = mainJsonObject.get("dataset").getAsJsonObject();
+             //Parse the name of the dataset
+             cd.setName(mainJsonObject.get("name").getAsString());
+             //Parse the start date of the dataset
+             cd.setStartYear(mainJsonObject.get("start_date").getAsString().substring(0, 4));
+             //Parse the end date of the dataset
+             cd.setEndYear(mainJsonObject.get("end_date").getAsString().substring(0, 4));
+             //Set the foreign key 
+             cd.setCountryCode(ct);
+             // Parse the Description
+             cd.setDescription(mainJsonObject.get("description").getAsString());
+             
+             ctCountryDataset.addCountryDataset(cd);
+             
+             for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
+//                 System.out.println(cd.getDatasetId());
+//                 System.out.println(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
+//                 System.out.println(e.getAsJsonArray().get(1).getAsString());
+//                 System.out.println("------------------");
+                 CountryData cData = new CountryData();
+                 cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
+                 cData.setValue(e.getAsJsonArray().get(1).getAsString());    
+                 cData.setDataset(cd);
+                 listCountryData.add(cData);
+             }
+             ctData.addCountryData(listCountryData);
+                        
+                          
+             
+             
+             
+            
+            } 
+        catch (MalformedURLException ex)
+        {
+            Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (IOException ex)
+        {
+            Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+//            //parse dt
+//            wn.getWeatherNowPK().setDt(new Date(mainJsonObject.get("dt").getAsLong()*1000));
+//            
+//            //parse id
+//            wn.getWeatherNowPK().setCityId(mainJsonObject.get("id").getAsInt());
+//            wn.setCity(new ControllerCity().findCityByCityId(mainJsonObject.get("id").getAsInt()));
+//            
+//            //parse {main}->temp
+//            jsonObject = mainJsonObject.getAsJsonObject("main");
+//            wn.setMaintemp(jsonObject.get("temp").getAsDouble());
+//
+//            //parse [weather]->{0}->id , [weather]->{0}->icon
+//            jsonObject = mainJsonObject.getAsJsonArray("weather").get(0).getAsJsonObject();          
+//            /*ερώτημα στον πίνακα WeatherDesc ώστε να φέρει στον Entity Manager την περιγραφή του καιρού στα ελληνικά*/
+//            wn.setWeatherDescId(new ControllerWeatherDesc().findWeatherDescById(jsonObject.get("id").getAsInt()));
+//            wn.setIcon(jsonObject.get("icon").getAsString());
+//            
+//            //parse {wind}->speed
+//            jsonObject = mainJsonObject.getAsJsonObject("wind");
+//            wn.setWindspeed(jsonObject.get("speed").getAsDouble());
+//            
+//            //parse {clouds}->all
+//            jsonObject = mainJsonObject.getAsJsonObject("clouds");
+//            wn.setCloudsall(jsonObject.get("all").getAsDouble());
+//            
+//            //parse {rain}->3h
+//            jsonObject = mainJsonObject.getAsJsonObject("rain");
+//            if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει βροχή
+//            {
+//                if (jsonObject.get("3h") != null)
+//                    wn.setRain(jsonObject.get("3h").getAsDouble());
+//            }
+//            
+//            //parse {snow}->3h
+//            jsonObject = mainJsonObject.getAsJsonObject("snow");
+//            if (jsonObject != null) //έλεγχος σε περίπτωση που δεν υπάρχει χιόνι
+//            {
+//                if (jsonObject.get("3h") != null)
+//                    wn.setSnow(jsonObject.get("3h").getAsDouble());
+//            }
+//        
+//        
+//        return wn;
+        
+        return cd;
+    }
+        
     /*Επιστρέφει λίστα με 40 προβλέψεις για 5 ημέρες μιας πόλης*/
 //    public ArrayList<Forecast> fetchForecasts(int cityId)
 //    {

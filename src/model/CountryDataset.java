@@ -1,12 +1,15 @@
-/** 
+/*
  * Τμήμα ΗΛΕ 43
  * @author ΒΑΣΙΛΗΣ ΤΣΑΠΑΡΙΚΟΣ - 114307
- * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛΟΒΕΝΤΗ - 126971
+ * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛΕΒΕΝΤΗ - 126971
  * @author ΑΡΙΣΤΕΙΔΗΣ ΦΑΣΟΥΛΑΣ - 100318
  */
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,12 +20,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author User
+ * @author Bill
  */
 @Entity
 @Table(name = "COUNTRY_DATASET")
@@ -35,6 +41,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "CountryDataset.findByDescription", query = "SELECT c FROM CountryDataset c WHERE c.description = :description")
     , @NamedQuery(name = "CountryDataset.findByDatasetId", query = "SELECT c FROM CountryDataset c WHERE c.datasetId = :datasetId")})
 public class CountryDataset implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
@@ -56,6 +65,8 @@ public class CountryDataset implements Serializable {
     @JoinColumn(name = "COUNTRY_CODE", referencedColumnName = "ISO_CODE")
     @ManyToOne
     private Country countryCode;
+    @OneToMany(mappedBy = "dataset")
+    private List<CountryData> countryDataList;
 
     public CountryDataset() {
     }
@@ -76,7 +87,9 @@ public class CountryDataset implements Serializable {
     }
 
     public void setStartYear(String startYear) {
+        String oldStartYear = this.startYear;
         this.startYear = startYear;
+        changeSupport.firePropertyChange("startYear", oldStartYear, startYear);
     }
 
     public String getName() {
@@ -84,7 +97,9 @@ public class CountryDataset implements Serializable {
     }
 
     public void setName(String name) {
+        String oldName = this.name;
         this.name = name;
+        changeSupport.firePropertyChange("name", oldName, name);
     }
 
     public String getEndYear() {
@@ -92,7 +107,9 @@ public class CountryDataset implements Serializable {
     }
 
     public void setEndYear(String endYear) {
+        String oldEndYear = this.endYear;
         this.endYear = endYear;
+        changeSupport.firePropertyChange("endYear", oldEndYear, endYear);
     }
 
     public String getDescription() {
@@ -100,7 +117,9 @@ public class CountryDataset implements Serializable {
     }
 
     public void setDescription(String description) {
+        String oldDescription = this.description;
         this.description = description;
+        changeSupport.firePropertyChange("description", oldDescription, description);
     }
 
     public Integer getDatasetId() {
@@ -108,7 +127,9 @@ public class CountryDataset implements Serializable {
     }
 
     public void setDatasetId(Integer datasetId) {
+        Integer oldDatasetId = this.datasetId;
         this.datasetId = datasetId;
+        changeSupport.firePropertyChange("datasetId", oldDatasetId, datasetId);
     }
 
     public Country getCountryCode() {
@@ -116,7 +137,18 @@ public class CountryDataset implements Serializable {
     }
 
     public void setCountryCode(Country countryCode) {
+        Country oldCountryCode = this.countryCode;
         this.countryCode = countryCode;
+        changeSupport.firePropertyChange("countryCode", oldCountryCode, countryCode);
+    }
+
+    @XmlTransient
+    public List<CountryData> getCountryDataList() {
+        return countryDataList;
+    }
+
+    public void setCountryDataList(List<CountryData> countryDataList) {
+        this.countryDataList = countryDataList;
     }
 
     @Override
@@ -142,6 +174,14 @@ public class CountryDataset implements Serializable {
     @Override
     public String toString() {
         return "model.CountryDataset[ datasetId=" + datasetId + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }
