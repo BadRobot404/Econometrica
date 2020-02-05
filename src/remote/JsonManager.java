@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.*;
@@ -113,7 +112,9 @@ public class JsonManager
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
+            controllerGDP.deleteData();
+            return null;
+            //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             
 
@@ -194,7 +195,9 @@ public CountryDataset fetchOil(String isoCode)
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
+            controllerOil.deleteData();
+            return null;
+            //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             
 

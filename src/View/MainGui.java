@@ -421,13 +421,18 @@ public class MainGui extends javax.swing.JFrame {
             if(!cdController.isInTheDatabase(currentCountry)){//in case they don't exist
                 JsonManager jm = new JsonManager();//Make the Api calls
                 currentGDPDataset = jm.fetchGDP(currentCountry.getIsoCode());//Get the GDP data
-                
-                //Update Label Text to fit data
-                LabelGDPDatasetName.setText(currentGDPDataset.getName());
-                LabelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
-                LabelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
-                
-                
+                if(currentGDPDataset == null){//if no valid data were found inform the User
+                    LabelGDPDatasetName.setText("No Data Were Found");
+                    LabelGDPStart.setText(" ");
+                    LabelGDPEnd.setText(" ");
+                    
+                } else {
+                    //Update Label Text to fit data
+                    LabelGDPDatasetName.setText(currentGDPDataset.getName());
+                    LabelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
+                    LabelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
+
+                }
                 //Update jTable in UI
                 currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
                 currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
@@ -441,14 +446,19 @@ public class MainGui extends javax.swing.JFrame {
                 bindingGroup.addBinding(jTableBinding);
                 jTableBinding.bind();
                 
-                
+                              
                 
                 currentOilDataset = jm.fetchOil(currentCountry.getIsoCode());//Get the Oil Data
-                labelOilDatasetName.setText(currentOilDataset.getName());
-                LabelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
-                LabelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
+                if(currentOilDataset == null){//if no valid data were found inform the User
+                    labelOilDatasetName.setText("No Data Were Found");
+                    LabelOilStart.setText(" ");
+                    LabelOilEnd.setText(" ");
+                } else {
+                    labelOilDatasetName.setText(currentOilDataset.getName());
+                    LabelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
+                    LabelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
 
-
+                }
                 //Update jTable in UI
                 currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
                 currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
@@ -461,6 +471,9 @@ public class MainGui extends javax.swing.JFrame {
                 columnBinding1.setColumnClass(String.class);
                 bindingGroup.addBinding(jTableBinding1);
                 jTableBinding1.bind();
+                
+                
+                
                 
             }
         }
