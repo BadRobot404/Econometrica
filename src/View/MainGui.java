@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import model.Country;
+import model.CountryDataset;
 import remote.JsonManager;
 
 /**
@@ -76,23 +77,23 @@ public class MainGui extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        labelOilDatasetName = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        LabelOilStart = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        LabelOilEnd = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableOil = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        LabelGDPDatasetName = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        LabelGDPStart = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        LabelGDPEnd = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableGDP = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
@@ -122,7 +123,7 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(6, 1, 6, 0);
         jPanel1.add(countrySelector, gridBagConstraints);
@@ -134,24 +135,27 @@ public class MainGui extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.ipadx = 1;
         gridBagConstraints.insets = new java.awt.Insets(6, 10, 6, 10);
         jPanel1.add(jButtonFetch, gridBagConstraints);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Select Country :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         jPanel1.add(jLabel1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.ipadx = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(jPanel1, gridBagConstraints);
@@ -176,14 +180,14 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel3.add(jLabel4, gridBagConstraints);
 
-        jLabel6.setText("jLabel6");
+        labelOilDatasetName.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel3.add(jLabel6, gridBagConstraints);
+        jPanel3.add(labelOilDatasetName, gridBagConstraints);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setText("Available Timespan : ");
@@ -203,13 +207,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 4, 0);
         jPanel3.add(jLabel11, gridBagConstraints);
 
-        jLabel12.setText("jLabel12");
+        LabelOilStart.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
-        jPanel3.add(jLabel12, gridBagConstraints);
+        jPanel3.add(LabelOilStart, gridBagConstraints);
 
         jLabel13.setText("End Date :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -219,13 +222,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel3.add(jLabel13, gridBagConstraints);
 
-        jLabel14.setText("jLabel14");
+        LabelOilEnd.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel3.add(jLabel14, gridBagConstraints);
+        jPanel3.add(LabelOilEnd, gridBagConstraints);
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 150));
 
@@ -271,14 +273,14 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel4.add(jLabel5, gridBagConstraints);
 
-        jLabel7.setText("jLabel7");
+        LabelGDPDatasetName.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel4.add(jLabel7, gridBagConstraints);
+        jPanel4.add(LabelGDPDatasetName, gridBagConstraints);
 
         jLabel9.setText("Start Date :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -298,13 +300,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(30, 0, 5, 0);
         jPanel4.add(jLabel10, gridBagConstraints);
 
-        jLabel15.setText("jLabel15");
+        LabelGDPStart.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
-        jPanel4.add(jLabel15, gridBagConstraints);
+        jPanel4.add(LabelGDPStart, gridBagConstraints);
 
         jLabel16.setText("End Date :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -314,13 +315,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel4.add(jLabel16, gridBagConstraints);
 
-        jLabel17.setText("jLabel17");
+        LabelGDPEnd.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel4.add(jLabel17, gridBagConstraints);
+        jPanel4.add(LabelGDPEnd, gridBagConstraints);
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 150));
 
@@ -410,10 +410,18 @@ public class MainGui extends javax.swing.JFrame {
             ControllerCountryDataset cdController  = new ControllerCountryDataset();
             Country currentCountry = new Country();
             currentCountry = (Country) countrySelector.getSelectedItem();
+            CountryDataset currentGDPDataset = new CountryDataset();
+            CountryDataset currentOilDataset = new CountryDataset();
             //Check if data exists in the database
             if(!cdController.isInTheDatabase(currentCountry)){//in case they don't exist
                 JsonManager jm = new JsonManager();//Make the Api calls
-                jm.fetchGDP(currentCountry.getIsoCode());//Get the GDP data
+                currentGDPDataset = jm.fetchGDP(currentCountry.getIsoCode());//Get the GDP data
+                
+                //Update Label Text to fit data
+                LabelGDPDatasetName.setText(currentGDPDataset.getName());
+                LabelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
+                LabelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
+                
                 
                 //Update jTable in UI
                 currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
@@ -430,7 +438,12 @@ public class MainGui extends javax.swing.JFrame {
                 
                 
                 
-                jm.fetchOil(currentCountry.getIsoCode());//Get the Oil Data
+                currentOilDataset = jm.fetchOil(currentCountry.getIsoCode());//Get the Oil Data
+                labelOilDatasetName.setText(currentOilDataset.getName());
+                LabelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
+                LabelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
+
+
                 //Update jTable in UI
                 currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
                 currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
@@ -451,41 +464,15 @@ public class MainGui extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                
-                new MainGui().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager EconometricaPUEntityManager;
+    private javax.swing.JLabel LabelGDPDatasetName;
+    private javax.swing.JLabel LabelGDPEnd;
+    private javax.swing.JLabel LabelGDPStart;
+    private javax.swing.JLabel LabelOilEnd;
+    private javax.swing.JLabel LabelOilStart;
     private java.util.List<model.Country> countryList;
     private javax.persistence.Query countryQuery;
     private javax.swing.JComboBox<String> countrySelector;
@@ -501,18 +488,12 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -523,6 +504,7 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableGDP;
     private javax.swing.JTable jTableOil;
+    private javax.swing.JLabel labelOilDatasetName;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
