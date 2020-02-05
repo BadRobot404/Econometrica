@@ -6,6 +6,9 @@
  */
 package controller;
 
+import static controller.Controller.em;
+import javax.persistence.Query;
+import model.Country;
 import model.CountryDataset;
 
 /**
@@ -23,6 +26,15 @@ public class ControllerCountryDataset extends Controller{
         em.persist(cd);
         em.getTransaction().commit();
     }
+    
+    public boolean isInTheDatabase(Country c){
+        
+        Query query = em.createNamedQuery("CountryDataset.findByCountryCode");
+        query.setParameter("countryCode", c);
+        
+        return !query.getResultList().isEmpty();
+    }
+    
     @Override
     protected void clearTable() {
         clearTbl("City.deleteAll");

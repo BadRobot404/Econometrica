@@ -6,7 +6,7 @@
  */
 package View;
 
-import controller.ControllerCountry;
+import controller.*;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -16,7 +16,9 @@ import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import model.Country;
+import remote.JsonManager;
 
 /**
  *
@@ -32,7 +34,7 @@ public class MainGui extends javax.swing.JFrame {
         //Read contents of CSV file and update DB if necessary
         initializeData();
         //Renderer for the binding of Country Selector 
-        jComboBox1.setRenderer(new DefaultListCellRenderer(){
+        countrySelector.setRenderer(new DefaultListCellRenderer(){
             @Override
             public Component getListCellRendererComponent(
                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -43,12 +45,7 @@ public class MainGui extends javax.swing.JFrame {
                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
             }
         });
-        TableColumnModel columnModel = jTableOil.getColumnModel();
-        columnModel.getColumn(0).setWidth(25);
-        columnModel.getColumn(1).setWidth(50);
-        columnModel = jTableGDP.getColumnModel();
-        columnModel.getColumn(0).setWidth(25);
-        columnModel.getColumn(1).setWidth(50);
+        
         
         
     }
@@ -67,19 +64,9 @@ public class MainGui extends javax.swing.JFrame {
         EconometricaPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("EconometricaPU").createEntityManager();
         countryQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM Country c");
         countryList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryQuery.getResultList();
-        countryQuery1 = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM Country c");
-        countryList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryQuery1.getResultList();
-        countryQuery2 = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM Country c");
-        countryList2 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryQuery2.getResultList();
-        countryQuery3 = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM Country c");
-        countryList3 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryQuery3.getResultList();
-        countryDatasetQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CountryDataset c");
-        countryDatasetList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryDatasetQuery.getResultList();
-        countryDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CountryData c");
-        countryDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : countryDataQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        countrySelector = new javax.swing.JComboBox<>();
+        jButtonFetch = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -115,12 +102,17 @@ public class MainGui extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, countryList3, jComboBox1);
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, countryList, countrySelector);
         bindingGroup.addBinding(jComboBoxBinding);
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        countrySelector.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                countrySelectorItemStateChanged(evt);
+            }
+        });
+        countrySelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                countrySelectorActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -129,16 +121,21 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(6, 1, 6, 0);
-        jPanel1.add(jComboBox1, gridBagConstraints);
+        jPanel1.add(countrySelector, gridBagConstraints);
 
-        jButton1.setText("Fetch Data");
+        jButtonFetch.setText("Fetch Data");
+        jButtonFetch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFetchActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.ipadx = 1;
         gridBagConstraints.insets = new java.awt.Insets(6, 10, 6, 10);
-        jPanel1.add(jButton1, gridBagConstraints);
+        jPanel1.add(jButtonFetch, gridBagConstraints);
 
         jLabel1.setText("Select Country :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -228,29 +225,6 @@ public class MainGui extends javax.swing.JFrame {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 150));
 
-        jTableOil.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null}
-            },
-            new String [] {
-                "Year", "Value"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
         jScrollPane1.setViewportView(jTableOil);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -336,16 +310,6 @@ public class MainGui extends javax.swing.JFrame {
         jPanel4.add(jLabel17, gridBagConstraints);
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 150));
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, countryDataList, jTableGDP);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
-        columnBinding.setColumnName("Data Year");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
-        columnBinding.setColumnName("Value");
-        columnBinding.setColumnClass(String.class);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
         jScrollPane2.setViewportView(jTableGDP);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -405,9 +369,33 @@ public class MainGui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void countrySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countrySelectorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_countrySelectorActionPerformed
+
+    private void countrySelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_countrySelectorItemStateChanged
+        if(evt.getSource()== countrySelector){
+            Country currentCountry = new Country();
+            currentCountry = (Country) countrySelector.getSelectedItem();
+            
+            
+        }
+    }//GEN-LAST:event_countrySelectorItemStateChanged
+
+    private void jButtonFetchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFetchActionPerformed
+        if(evt.getSource() == jButtonFetch){
+            ControllerCountryDataset cdController  = new ControllerCountryDataset();
+            Country currentCountry = new Country();
+            currentCountry = (Country) countrySelector.getSelectedItem();
+            if(!cdController.isInTheDatabase(currentCountry)){
+                JsonManager jm = new JsonManager();
+                jm.fetchGDP(currentCountry.getIsoCode());
+                
+                
+                //model.fireTableDataChanged();
+            }
+        }
+    }//GEN-LAST:event_jButtonFetchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -447,24 +435,14 @@ public class MainGui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager EconometricaPUEntityManager;
-    private java.util.List<model.CountryData> countryDataList;
-    private javax.persistence.Query countryDataQuery;
-    private java.util.List<model.CountryDataset> countryDatasetList;
-    private javax.persistence.Query countryDatasetQuery;
     private java.util.List<model.Country> countryList;
-    private java.util.List<model.Country> countryList1;
-    private java.util.List<model.Country> countryList2;
-    private java.util.List<model.Country> countryList3;
     private javax.persistence.Query countryQuery;
-    private javax.persistence.Query countryQuery1;
-    private javax.persistence.Query countryQuery2;
-    private javax.persistence.Query countryQuery3;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> countrySelector;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButtonFetch;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -523,9 +501,7 @@ public void initializeData(){
             }
             
         }
-        for(Country c : countryList){
-            System.out.println(c.getIsoCode() + " " + c.getName() );
-        }
+        
     }
         
 }

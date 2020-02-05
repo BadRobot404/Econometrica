@@ -36,10 +36,11 @@ public class JsonManager
     
     public JsonManager()
     {
+        this.apiKey = "f3uK5mxjS8rPxPFyJ8fy";
     }
     
     /*Επιστρέφει τον καιρό τώρα για μια πόλη*/
-    public CountryDataset fetchGDP()
+    public CountryDataset fetchGDP(String isoCode)
     {
         CountryDataset cd = new CountryDataset();
         ControllerCountryDataset ctCountryDataset = new ControllerCountryDataset();
@@ -47,11 +48,13 @@ public class JsonManager
         ControllerCountry ctController = new ControllerCountry();
         ControllerCountryData ctData = new ControllerCountryData();
         List<CountryData> listCountryData = new ArrayList<CountryData>();
+        List<CurrentGdp> listCurrentGdp = new ArrayList<CurrentGdp>();
+        ControllerCurrentGDP controllerGDP = new ControllerCurrentGDP();
         
         try
         {
             /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
-            URL url = new URL(createUrlString());
+            URL url = new URL(createUrlString(isoCode));
             
             /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
             InputStream is = url.openStream(); 
@@ -69,13 +72,7 @@ public class JsonManager
             /*Κρατάμε και ένα προσωρινό αντικείμενο για JsonObject για να γίνονται λιγότερες κλήσεις με λιγότερο κώδικα*/
             JsonObject jsonObject;
             
-            ct.setIsoCode("300");
-            ct.setName("Greece");
-            
-            if(!ctController.isInTheDatabase(ct)){
-                ctController.addCountry(ct);
-            }
-            
+                                
             
              mainJsonObject = mainJsonObject.get("dataset").getAsJsonObject();
              //Parse the name of the dataset
@@ -101,10 +98,19 @@ public class JsonManager
                  cData.setValue(e.getAsJsonArray().get(1).getAsString());    
                  cData.setDataset(cd);
                  listCountryData.add(cData);
+                 CurrentGdp cGdp = new CurrentGdp();
+                 cGdp.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
+                 cGdp.setValue(e.getAsJsonArray().get(1).getAsString());
+                 listCurrentGdp.add(cGdp);
+                 
              }
              //ctData.addCountryData(listCountryData);
                         
-                          
+             for (CurrentGdp cc : listCurrentGdp){
+                 System.out.println(cc.getDataYear() + " " + cc.getValue());
+             }
+             controllerGDP.deleteData();
+             controllerGDP.addCurrentGdp(listCurrentGdp);
              
              
              
@@ -373,11 +379,13 @@ public CountryDataset fetchOil()
 //    }
     
     /*Κατασκευή κατάλληλου URL String για το API Request*/
-    private String createUrlString()
+    private String createUrlString(String isoCode)
     {
-        String requestParam = null;
+        String prefix = "https://www.quandl.com/api/v3/datasets/WWDI/";
+        String postfix = "_NY_GDP_MKTP_CN.json?api_key=";
+        String request = prefix + isoCode + postfix + apiKey;
         
-        return (baseURL);
+        return (request);
     }
     
     public static void setApiKey(String _apiKey)

@@ -39,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "CountryDataset.findByName", query = "SELECT c FROM CountryDataset c WHERE c.name = :name")
     , @NamedQuery(name = "CountryDataset.findByEndYear", query = "SELECT c FROM CountryDataset c WHERE c.endYear = :endYear")
     , @NamedQuery(name = "CountryDataset.findByDescription", query = "SELECT c FROM CountryDataset c WHERE c.description = :description")
-    , @NamedQuery(name = "CountryDataset.findByDatasetId", query = "SELECT c FROM CountryDataset c WHERE c.datasetId = :datasetId")})
+    , @NamedQuery(name = "CountryDataset.findByDatasetId", query = "SELECT c FROM CountryDataset c WHERE c.datasetId = :datasetId")
+    , @NamedQuery(name = "CountryDataset.findByCountryCode", query = "SELECT c FROM CountryDataset c WHERE c.countryCode = :countryCode")})
 public class CountryDataset implements Serializable {
 
     @Transient
