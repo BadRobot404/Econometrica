@@ -184,7 +184,7 @@ public CountryDataset fetchOil(Country ct)
              //Delete all entries in Table Current Oil
              controllerOil.deleteData();
              //Commit new Data to table Current Oil
-             controllerOil.addCurrentGdp(listCurrentOil);            
+             controllerOil.addCurrentOil(listCurrentOil);            
                           
               
              

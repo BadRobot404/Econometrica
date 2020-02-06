@@ -17,7 +17,7 @@ public class ControllerCurrentOilData extends Controller{
         super();
     }
     
-    public void addCurrentGdp(List<CurrentOilData>  c){
+    public void addCurrentOil(List<CurrentOilData>  c){
         for(CurrentOilData cc : c){
             em.getTransaction().begin();
             em.persist(cc);
