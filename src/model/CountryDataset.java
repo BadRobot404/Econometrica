@@ -9,8 +9,10 @@ package model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,8 +68,8 @@ public class CountryDataset implements Serializable {
     @JoinColumn(name = "COUNTRY_CODE", referencedColumnName = "ISO_CODE")
     @ManyToOne
     private Country countryCode;
-    @OneToMany(mappedBy = "dataset")
-    private List<CountryData> countryDataList;
+    @OneToMany(mappedBy = "dataset",cascade = CascadeType.PERSIST)
+    private List<CountryData> countryDataList = new ArrayList<>();
 
     public CountryDataset() {
     }

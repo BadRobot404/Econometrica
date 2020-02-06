@@ -39,11 +39,11 @@ public class JsonManager
     }
     
     /*Επιστρέφει τα στοιχεία για το ΑΕΠ χώρα*/
-    public CountryDataset fetchGDP(String isoCode)
+    public CountryDataset fetchGDP(Country ct)
     {
         CountryDataset cd = new CountryDataset();
         
-        Country ct = new Country();
+        
         
         List<CountryData> listCountryData = new ArrayList<CountryData>();
         List<CurrentGdp> listCurrentGdp = new ArrayList<CurrentGdp>();
@@ -53,7 +53,7 @@ public class JsonManager
         try
         {
             /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
-            URL url = new URL(createUrlString(isoCode,"GDP"));
+            URL url = new URL(createUrlString(ct.getIsoCode(),"GDP"));
             
             /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
             InputStream is = url.openStream(); 
@@ -99,6 +99,7 @@ public class JsonManager
                  listCurrentGdp.add(cGdp);
                  
              }
+             cd.setCountryDataList(listCountryData);
              
              //Delete all entries in table currentGDP  
              controllerGDP.deleteData();
@@ -121,10 +122,10 @@ public class JsonManager
         return cd;
     }
 
-public CountryDataset fetchOil(String isoCode)
+public CountryDataset fetchOil(Country ct)
     {
         CountryDataset cd = new CountryDataset();
-        Country ct = new Country();
+        
         
         List<CountryData> listCountryData = new ArrayList<CountryData>();
         List<CurrentOilData> listCurrentOil = new ArrayList<CurrentOilData>();
@@ -133,7 +134,7 @@ public CountryDataset fetchOil(String isoCode)
         try
         {
             /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
-            URL url = new URL(createUrlString(isoCode,"Oil"));
+            URL url = new URL(createUrlString(ct.getIsoCode(),"Oil"));
             
             /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
             InputStream is = url.openStream(); 
@@ -164,8 +165,7 @@ public CountryDataset fetchOil(String isoCode)
              // Parse the Description
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
-             
-             
+                          
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
                 //Parse Data entry 
                  CountryData cData = new CountryData();
@@ -179,6 +179,7 @@ public CountryDataset fetchOil(String isoCode)
                  cOil.setValue(e.getAsJsonArray().get(1).getAsString());
                  listCurrentOil.add(cOil);
              }
+             cd.setCountryDataList(listCountryData);
              
              //Delete all entries in Table Current Oil
              controllerOil.deleteData();

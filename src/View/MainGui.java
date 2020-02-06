@@ -15,10 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import model.Country;
-import model.CountryDataset;
+import model.*;
 import remote.JsonManager;
 
 /**
@@ -30,6 +27,10 @@ public class MainGui extends javax.swing.JFrame {
     /**
      * Creates new form MainGui
      */
+    private CountryDataset currentGDPDataset = new CountryDataset();
+    private CountryDataset currentOilDataset = new CountryDataset();
+    private Country currentCountry = new Country();
+    
     public MainGui() {
         initComponents();
         //Read contents of CSV file and update DB if necessary
@@ -96,7 +97,7 @@ public class MainGui extends javax.swing.JFrame {
         LabelGDPEnd = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableGDP = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
@@ -361,14 +362,19 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(jPanel2, gridBagConstraints);
 
-        jButton2.setText("Save");
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.ipadx = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(jButton2, gridBagConstraints);
+        getContentPane().add(saveButton, gridBagConstraints);
 
         jButton3.setText("Plot");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -403,7 +409,7 @@ public class MainGui extends javax.swing.JFrame {
 
     private void countrySelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_countrySelectorItemStateChanged
         if(evt.getSource()== countrySelector){
-            Country currentCountry = new Country();
+            
             currentCountry = (Country) countrySelector.getSelectedItem();
             
             
@@ -412,15 +418,12 @@ public class MainGui extends javax.swing.JFrame {
 
     private void jButtonFetchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFetchActionPerformed
         if(evt.getSource() == jButtonFetch){
-            ControllerCountryDataset cdController  = new ControllerCountryDataset();
-            Country currentCountry = new Country();
-            currentCountry = (Country) countrySelector.getSelectedItem();
-            CountryDataset currentGDPDataset = new CountryDataset();
-            CountryDataset currentOilDataset = new CountryDataset();
-            //Check if data exists in the database
-            if(!cdController.isInTheDatabase(currentCountry)){//in case they don't exist
+            ControllerCountryDataset controllerCountryDataset  = new ControllerCountryDataset();
+                      
+            //Checking if data exists in the database
+            if(!controllerCountryDataset.isInTheDatabase(currentCountry)){//in case they don't exist
                 JsonManager jm = new JsonManager();//Make the Api calls
-                currentGDPDataset = jm.fetchGDP(currentCountry.getIsoCode());//Get the GDP data
+                currentGDPDataset = jm.fetchGDP(currentCountry);//Get the GDP data
                 if(currentGDPDataset == null){//if no valid data were found inform the User
                     LabelGDPDatasetName.setText("No Data Were Found");
                     LabelGDPStart.setText(" ");
@@ -446,9 +449,7 @@ public class MainGui extends javax.swing.JFrame {
                 bindingGroup.addBinding(jTableBinding);
                 jTableBinding.bind();
                 
-                              
-                
-                currentOilDataset = jm.fetchOil(currentCountry.getIsoCode());//Get the Oil Data
+                currentOilDataset = jm.fetchOil(currentCountry);//Get the Oil Data
                 if(currentOilDataset == null){//if no valid data were found inform the User
                     labelOilDatasetName.setText("No Data Were Found");
                     LabelOilStart.setText(" ");
@@ -471,13 +472,22 @@ public class MainGui extends javax.swing.JFrame {
                 columnBinding1.setColumnClass(String.class);
                 bindingGroup.addBinding(jTableBinding1);
                 jTableBinding1.bind();
-                
-                
-                
-                
+                          
+            } else {
+                List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
+                System.out.println(r.get(0).getName());
             }
         }
     }//GEN-LAST:event_jButtonFetchActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if(evt.getSource() == saveButton){
+            ControllerCountryDataset controllerCountryDataset = new ControllerCountryDataset();
+            controllerCountryDataset.addCountryDataset(currentGDPDataset);
+            controllerCountryDataset.addCountryDataset(currentOilDataset);
+
+        }
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -498,7 +508,6 @@ public class MainGui extends javax.swing.JFrame {
     private javax.persistence.Query currentGdpQuery;
     private java.util.List<model.CurrentOilData> currentOilDataList;
     private javax.persistence.Query currentOilDataQuery;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonFetch;
@@ -523,6 +532,7 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JTable jTableGDP;
     private javax.swing.JTable jTableOil;
     private javax.swing.JLabel labelOilDatasetName;
+    private javax.swing.JButton saveButton;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

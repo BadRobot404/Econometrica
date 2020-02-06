@@ -10,6 +10,9 @@ import static controller.Controller.em;
 import javax.persistence.Query;
 import model.Country;
 import model.CountryDataset;
+import java.util.List;
+import model.CountryData;
+
 
 /**
  *
@@ -24,6 +27,9 @@ public class ControllerCountryDataset extends Controller{
     public void addCountryDataset(CountryDataset cd){
         em.getTransaction().begin();
         em.persist(cd);
+        for(CountryData c : cd.getCountryDataList()){
+            em.persist(c);
+        }
         em.getTransaction().commit();
     }
     
@@ -33,6 +39,13 @@ public class ControllerCountryDataset extends Controller{
         query.setParameter("countryCode", c);
         
         return !query.getResultList().isEmpty();
+    }
+    public List<CountryDataset> selectByCountryName(Country c){
+        
+        Query query = em.createNamedQuery("CountryDataset.findByCountryCode");
+        query.setParameter("countryCode", c);
+        
+        return query.getResultList();
     }
     
     @Override
