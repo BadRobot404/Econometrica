@@ -144,7 +144,7 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(6, 10, 6, 10);
         jPanel1.add(jButtonFetch, gridBagConstraints);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Select Country :");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -421,62 +421,62 @@ public class MainGui extends javax.swing.JFrame {
             ControllerCountryDataset controllerCountryDataset  = new ControllerCountryDataset();
                       
             //Checking if data exists in the database
-            if(!controllerCountryDataset.isInTheDatabase(currentCountry)){//in case they don't exist
-                JsonManager jm = new JsonManager();//Make the Api calls
-                currentGDPDataset = jm.fetchGDP(currentCountry);//Get the GDP data
-                if(currentGDPDataset == null){//if no valid data were found inform the User
-                    LabelGDPDatasetName.setText("No Data Were Found");
-                    LabelGDPStart.setText(" ");
-                    LabelGDPEnd.setText(" ");
-                    
-                } else {
-                    //Update Label Text to fit data
-                    LabelGDPDatasetName.setText(currentGDPDataset.getName());
-                    LabelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
-                    LabelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
-
-                }
-                //Update jTable in UI
-                currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
-                currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
-                org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
-                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
-                columnBinding.setColumnName("Data Year");
-                columnBinding.setColumnClass(String.class);
-                columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
-                columnBinding.setColumnName("Value");
-                columnBinding.setColumnClass(String.class);
-                bindingGroup.addBinding(jTableBinding);
-                jTableBinding.bind();
-                
-                currentOilDataset = jm.fetchOil(currentCountry);//Get the Oil Data
-                if(currentOilDataset == null){//if no valid data were found inform the User
-                    labelOilDatasetName.setText("No Data Were Found");
-                    LabelOilStart.setText(" ");
-                    LabelOilEnd.setText(" ");
-                } else {
-                    labelOilDatasetName.setText(currentOilDataset.getName());
-                    LabelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
-                    LabelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
-
-                }
-                //Update jTable in UI
-                currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
-                currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
-                org.jdesktop.swingbinding.JTableBinding jTableBinding1 = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
-                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
-                columnBinding1.setColumnName("Data Year");
-                columnBinding1.setColumnClass(String.class);
-                columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
-                columnBinding1.setColumnName("Value");
-                columnBinding1.setColumnClass(String.class);
-                bindingGroup.addBinding(jTableBinding1);
-                jTableBinding1.bind();
-                          
-            } else {
-                List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
-                System.out.println(r.get(0).getName());
-            }
+//            if(!controllerCountryDataset.isInTheDatabase(currentCountry)){//in case they don't exist
+//                JsonManager jm = new JsonManager();//Make the Api calls
+//                currentGDPDataset = jm.fetchGDP(currentCountry);//Get the GDP data
+//                if(currentGDPDataset == null){//if no valid data were found inform the User
+//                    LabelGDPDatasetName.setText("No Data Were Found");
+//                    LabelGDPStart.setText(" ");
+//                    LabelGDPEnd.setText(" ");
+//                    
+//                } else {
+//                    //Update Label Text to fit data
+//                    LabelGDPDatasetName.setText(currentGDPDataset.getName());
+//                    LabelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
+//                    LabelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
+//
+//                }
+//                //Update jTable in UI
+//                currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
+//                currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
+//                org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
+//                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+//                columnBinding.setColumnName("Data Year");
+//                columnBinding.setColumnClass(String.class);
+//                columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+//                columnBinding.setColumnName("Value");
+//                columnBinding.setColumnClass(String.class);
+//                bindingGroup.addBinding(jTableBinding);
+//                jTableBinding.bind();
+//                
+//                currentOilDataset = jm.fetchOil(currentCountry);//Get the Oil Data
+//                if(currentOilDataset == null){//if no valid data were found inform the User
+//                    labelOilDatasetName.setText("No Data Were Found");
+//                    LabelOilStart.setText(" ");
+//                    LabelOilEnd.setText(" ");
+//                } else {
+//                    labelOilDatasetName.setText(currentOilDataset.getName());
+//                    LabelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
+//                    LabelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
+//
+//                }
+//                //Update jTable in UI
+//                currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
+//                currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
+//                org.jdesktop.swingbinding.JTableBinding jTableBinding1 = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
+//                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+//                columnBinding1.setColumnName("Data Year");
+//                columnBinding1.setColumnClass(String.class);
+//                columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+//                columnBinding1.setColumnName("Value");
+//                columnBinding1.setColumnClass(String.class);
+//                bindingGroup.addBinding(jTableBinding1);
+//                jTableBinding1.bind();
+//                          
+//            } else {
+//                //List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
+//                //System.out.println(r.get(0).getName());
+//            }
         }
     }//GEN-LAST:event_jButtonFetchActionPerformed
 
