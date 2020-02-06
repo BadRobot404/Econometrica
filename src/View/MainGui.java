@@ -444,18 +444,8 @@ public class MainGui extends javax.swing.JFrame {
                 refreshOilLabels();
                 
                 //Update jTable in UI
-                
-                currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
-                currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
-                org.jdesktop.swingbinding.JTableBinding jTableBinding1 = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
-                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
-                columnBinding1.setColumnName("Data Year");
-                columnBinding1.setColumnClass(String.class);
-                columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
-                columnBinding1.setColumnName("Value");
-                columnBinding1.setColumnClass(String.class);
-                bindingGroup.addBinding(jTableBinding1);
-                jTableBinding1.bind();
+                refreshOilTable();
+
                           
             } else {
                 List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
@@ -466,6 +456,7 @@ public class MainGui extends javax.swing.JFrame {
                 
                 for(CountryDataset cd : r){
                     if(cd.getDescription().contains("GDP")){
+                        System.out.println(cd.getCountryCode().getIsoCode());
                         currentGDPDataset.setCountryCode(cd.getCountryCode());
                         currentGDPDataset.setCountryDataList(cd.getCountryDataList());
                         currentGDPDataset.setDescription(cd.getDescription());
@@ -492,7 +483,6 @@ public class MainGui extends javax.swing.JFrame {
                         columnBinding2.setColumnName("Value");
                         columnBinding2.setColumnClass(String.class);
                         bindingGroup.addBinding(jTableBinding2);
-                        System.out.println(currentGdpList.size());
                         jTableBinding2.bind();
                     
                     } else if (cd.getDescription().contains("Oil")){
@@ -548,7 +538,7 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     public void refreshGDPLabels(){
-        if(currentGDPDataset == null){//if no valid data were found inform the User
+        if(currentGDPDataset.getName() == null){//if no valid data were found inform the User
             LabelGDPDatasetName.setText("No Data Were Found");
             LabelGDPStart.setText(" ");
             LabelGDPEnd.setText(" ");
@@ -562,7 +552,7 @@ public class MainGui extends javax.swing.JFrame {
     }
     
     public void refreshOilLabels(){
-        if(currentOilDataset == null){//if no valid data were found inform the User
+        if(currentOilDataset.getName() == null){//if no valid data were found inform the User
             labelOilDatasetName.setText("No Data Were Found");
             LabelOilStart.setText(" ");
             LabelOilEnd.setText(" ");

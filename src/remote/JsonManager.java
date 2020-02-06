@@ -114,7 +114,7 @@ public class JsonManager
         catch (IOException ex)
         {
             controllerGDP.deleteData();
-            return null;
+            return new CountryDataset();
             //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             
@@ -197,7 +197,7 @@ public CountryDataset fetchOil(Country ct)
         catch (IOException ex)
         {
             controllerOil.deleteData();
-            return null;
+            return new CountryDataset();
             //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             

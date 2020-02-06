@@ -68,8 +68,8 @@ public class CountryDataset implements Serializable {
     @JoinColumn(name = "COUNTRY_CODE", referencedColumnName = "ISO_CODE")
     @ManyToOne
     private Country countryCode;
-    @OneToMany(mappedBy = "dataset",cascade = CascadeType.PERSIST)
-    private List<CountryData> countryDataList = new ArrayList<>();
+    @OneToMany(mappedBy = "dataset")
+    private List<CountryData> countryDataList;
 
     public CountryDataset() {
     }
