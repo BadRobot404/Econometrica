@@ -217,7 +217,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelOilStart">
+            <Component class="javax.swing.JLabel" name="labelOilStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -237,7 +237,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelOilEnd">
+            <Component class="javax.swing.JLabel" name="labelOilEnd">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -338,7 +338,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelGDPDatasetName">
+            <Component class="javax.swing.JLabel" name="labelGDPDatasetName">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -371,7 +371,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelGDPStart">
+            <Component class="javax.swing.JLabel" name="labelGDPStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -391,7 +391,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelGDPEnd">
+            <Component class="javax.swing.JLabel" name="labelGDPEnd">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -482,7 +482,7 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton4">
+    <Component class="javax.swing.JButton" name="deleteButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="DELETE ALL"/>
       </Properties>
@@ -492,7 +492,7 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+    <Component class="javax.swing.JCheckBox" name="savedInDBCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Already Saved to Database"/>
       </Properties>
