@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CountryData.findAll", query = "SELECT c FROM CountryData c")
     , @NamedQuery(name = "CountryData.findByDataYear", query = "SELECT c FROM CountryData c WHERE c.dataYear = :dataYear")
     , @NamedQuery(name = "CountryData.findByValue", query = "SELECT c FROM CountryData c WHERE c.value = :value")
-    , @NamedQuery(name = "CountryData.findByDataId", query = "SELECT c FROM CountryData c WHERE c.dataId = :dataId")})
+    , @NamedQuery(name = "CountryData.findByDataId", query = "SELECT c FROM CountryData c WHERE c.dataId = :dataId")
+    , @NamedQuery(name = "CountryData.deleteAll", query = "DELETE  FROM CountryData ")})
 public class CountryData implements Serializable {
 
     @Transient

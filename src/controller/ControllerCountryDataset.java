@@ -48,6 +48,10 @@ public class ControllerCountryDataset extends Controller{
         return query.getResultList();
     }
     
+    public void deleteData(){
+        clearTbl("CountryDataset.deleteAll");
+    }
+    
     @Override
     protected void clearTable() {
         clearTbl("City.deleteAll");

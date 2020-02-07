@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import model.*;
 import remote.JsonManager;
 
@@ -386,6 +387,11 @@ public class MainGui extends javax.swing.JFrame {
         getContentPane().add(jButton3, gridBagConstraints);
 
         deleteButton.setText("DELETE ALL");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -468,6 +474,7 @@ public class MainGui extends javax.swing.JFrame {
                 //Disable SAVE button
                 saveButton.setEnabled(false);
                 
+                //Copy the contents of the Database to the live tables.
                 for(CountryDataset cd : r){
                     if(cd.getDescription().contains("GDP")){
                         
@@ -511,7 +518,22 @@ public class MainGui extends javax.swing.JFrame {
                         refreshOilTable();
 
                     }
-                    
+                }
+                
+                //If there was only one dataset in the DB 
+                if(r.size()==1){
+                    if(r.get(0).getDescription().contains("GDP")){
+                        controllerOil.deleteData();
+                        currentOilDataset = new CountryDataset();
+                        refreshOilLabels();
+                        refreshOilTable();
+                    }
+                    if(r.get(0).getDescription().contains("Oil")){
+                        controllerCurrentGDP.deleteData();
+                        currentGDPDataset = new CountryDataset();
+                        refreshGDPLabels();
+                        refreshGDPTable();
+                    }
                 }
             }
         }
@@ -536,6 +558,27 @@ public class MainGui extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        if(evt.getSource() == deleteButton ){
+            //Display a confirmation Dialog
+            int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all Data", "Delete", JOptionPane.YES_NO_OPTION);
+            
+            //If answer was yes
+            if(option == 0){
+                ControllerCountryData controllerCountryData = new ControllerCountryData();
+                ControllerCountryDataset controllerCountryDataset = new ControllerCountryDataset();
+                
+                //Delete all Data
+                controllerCountryData.deleteData();
+                controllerCountryDataset.deleteData();
+                
+                //Update UI elements
+                saveButton.setEnabled(true);
+                savedInDBCheckBox.setSelected(false);
+            }
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
     public void refreshGDPLabels(){
         if(currentGDPDataset.getName() == null){//if no valid data were found inform the User
@@ -579,7 +622,7 @@ public class MainGui extends javax.swing.JFrame {
     }
     
     public void refreshGDPTable(){
-        currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
+        currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c ORDER BY c.dataYear DESC" );
         currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
