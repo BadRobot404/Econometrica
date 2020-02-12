@@ -30,6 +30,10 @@ public class ControllerCountryData extends Controller{
         
     }
     
+    public void deleteData(){
+        clearTbl("CountryData.deleteAll");
+    }
+    
            
     @Override
         protected void clearTable() {

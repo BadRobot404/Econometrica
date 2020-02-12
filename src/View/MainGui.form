@@ -64,6 +64,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Econometrica"/>
     <Property name="name" type="java.lang.String" value="MainFrame" noResource="true"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -217,7 +218,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelOilStart">
+            <Component class="javax.swing.JLabel" name="labelOilStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -237,7 +238,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelOilEnd">
+            <Component class="javax.swing.JLabel" name="labelOilEnd">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -338,7 +339,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelGDPDatasetName">
+            <Component class="javax.swing.JLabel" name="labelGDPDatasetName">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -371,7 +372,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelGDPStart">
+            <Component class="javax.swing.JLabel" name="labelGDPStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -391,7 +392,7 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="LabelGDPEnd">
+            <Component class="javax.swing.JLabel" name="labelGDPEnd">
               <Properties>
                 <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
@@ -472,29 +473,36 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="plotButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Plot"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plotButtonActionPerformed"/>
+      </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="1" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="5" insetsBottom="5" insetsRight="5" anchor="10" weightX="0.0" weightY="0.0"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton4">
+    <Component class="javax.swing.JButton" name="deleteButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="DELETE ALL"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteButtonActionPerformed"/>
+      </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="2" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="5" insetsBottom="5" insetsRight="5" anchor="10" weightX="0.0" weightY="0.0"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+    <Component class="javax.swing.JCheckBox" name="savedInDBCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Already Saved to Database"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

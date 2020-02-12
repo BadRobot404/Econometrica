@@ -114,7 +114,7 @@ public class JsonManager
         catch (IOException ex)
         {
             controllerGDP.deleteData();
-            return null;
+            return new CountryDataset();
             //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             
@@ -184,7 +184,7 @@ public CountryDataset fetchOil(Country ct)
              //Delete all entries in Table Current Oil
              controllerOil.deleteData();
              //Commit new Data to table Current Oil
-             controllerOil.addCurrentGdp(listCurrentOil);            
+             controllerOil.addCurrentOil(listCurrentOil);            
                           
               
              
@@ -197,7 +197,7 @@ public CountryDataset fetchOil(Country ct)
         catch (IOException ex)
         {
             controllerOil.deleteData();
-            return null;
+            return new CountryDataset();
             //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
             

@@ -15,8 +15,29 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import model.*;
 import remote.JsonManager;
+
+import java.awt.Color;
+import java.text.SimpleDateFormat;
+import javax.swing.JFrame;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.time.Year;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -47,6 +68,8 @@ public class MainGui extends javax.swing.JFrame {
                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
             }
         });
+        
+        saveButton.setEnabled(false);
         
         
         
@@ -81,28 +104,29 @@ public class MainGui extends javax.swing.JFrame {
         labelOilDatasetName = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        LabelOilStart = new javax.swing.JLabel();
+        labelOilStart = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        LabelOilEnd = new javax.swing.JLabel();
+        labelOilEnd = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableOil = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        LabelGDPDatasetName = new javax.swing.JLabel();
+        labelGDPDatasetName = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        LabelGDPStart = new javax.swing.JLabel();
+        labelGDPStart = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        LabelGDPEnd = new javax.swing.JLabel();
+        labelGDPEnd = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableGDP = new javax.swing.JTable();
         saveButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        plotButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        savedInDBCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Econometrica");
         setName("MainFrame"); // NOI18N
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -209,12 +233,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 4, 0);
         jPanel3.add(jLabel11, gridBagConstraints);
 
-        LabelOilStart.setText(" ");
+        labelOilStart.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
-        jPanel3.add(LabelOilStart, gridBagConstraints);
+        jPanel3.add(labelOilStart, gridBagConstraints);
 
         jLabel13.setText("End Date :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -224,12 +248,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel3.add(jLabel13, gridBagConstraints);
 
-        LabelOilEnd.setText(" ");
+        labelOilEnd.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel3.add(LabelOilEnd, gridBagConstraints);
+        jPanel3.add(labelOilEnd, gridBagConstraints);
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 150));
 
@@ -277,14 +301,14 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel4.add(jLabel5, gridBagConstraints);
 
-        LabelGDPDatasetName.setText(" ");
+        labelGDPDatasetName.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel4.add(LabelGDPDatasetName, gridBagConstraints);
+        jPanel4.add(labelGDPDatasetName, gridBagConstraints);
 
         jLabel9.setText("Start Date :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -304,12 +328,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(30, 0, 5, 0);
         jPanel4.add(jLabel10, gridBagConstraints);
 
-        LabelGDPStart.setText(" ");
+        labelGDPStart.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
-        jPanel4.add(LabelGDPStart, gridBagConstraints);
+        jPanel4.add(labelGDPStart, gridBagConstraints);
 
         jLabel16.setText("End Date :");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -319,12 +343,12 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         jPanel4.add(jLabel16, gridBagConstraints);
 
-        LabelGDPEnd.setText(" ");
+        labelGDPEnd.setText(" ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        jPanel4.add(LabelGDPEnd, gridBagConstraints);
+        jPanel4.add(labelGDPEnd, gridBagConstraints);
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 150));
 
@@ -376,27 +400,38 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(saveButton, gridBagConstraints);
 
-        jButton3.setText("Plot");
+        plotButton.setText("Plot");
+        plotButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(jButton3, gridBagConstraints);
+        getContentPane().add(plotButton, gridBagConstraints);
 
-        jButton4.setText("DELETE ALL");
+        deleteButton.setText("DELETE ALL");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(jButton4, gridBagConstraints);
+        getContentPane().add(deleteButton, gridBagConstraints);
 
-        jCheckBox1.setText("Already Saved to Database");
+        savedInDBCheckBox.setText("Already Saved to Database");
+        savedInDBCheckBox.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 24);
-        getContentPane().add(jCheckBox1, gridBagConstraints);
+        getContentPane().add(savedInDBCheckBox, gridBagConstraints);
 
         bindingGroup.bind();
 
@@ -421,6 +456,115 @@ public class MainGui extends javax.swing.JFrame {
             ControllerCountryDataset controllerCountryDataset  = new ControllerCountryDataset();
                       
             //Checking if data exists in the database
+
+            if(!controllerCountryDataset.isInTheDatabase(currentCountry)){//in case they don't exist
+                
+                //Make the Api calls
+                JsonManager jm = new JsonManager();
+                
+                //Uncheck box to indicate that data exists in the DB
+                savedInDBCheckBox.setSelected(false);
+                                
+                //Get the GDP data
+                currentGDPDataset = jm.fetchGDP(currentCountry);
+                
+                //Update Labels 
+                refreshGDPLabels();
+                
+                //Update jTable in UI
+                refreshGDPTable();
+                
+                //Get the Oil Data
+                currentOilDataset = jm.fetchOil(currentCountry);
+                
+                //Update Labels 
+                refreshOilLabels();
+                
+                //Update jTable in UI
+                refreshOilTable();
+
+                //Enable SAVE button
+                saveButton.setEnabled(true);
+                
+                
+            } else {
+                
+                                
+                List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
+                List<CurrentGdp> listCurrentGdp = new ArrayList<CurrentGdp>();
+                List<CurrentOilData> listCurrentOil = new ArrayList<CurrentOilData>();
+                ControllerCurrentGDP controllerCurrentGDP = new ControllerCurrentGDP();
+                ControllerCurrentOilData controllerOil = new ControllerCurrentOilData();
+                
+                //Check box to indicate that data exists in the DB
+                savedInDBCheckBox.setSelected(true);
+
+                //Disable SAVE button
+                saveButton.setEnabled(false);
+                
+                //Copy the contents of the Database to the live tables.
+                for(CountryDataset cd : r){
+                    if(cd.getDescription().contains("GDP")){
+                        
+                        currentGDPDataset.setCountryCode(cd.getCountryCode());
+                        currentGDPDataset.setCountryDataList(cd.getCountryDataList());
+                        currentGDPDataset.setDescription(cd.getDescription());
+                        currentGDPDataset.setStartYear(cd.getStartYear());
+                        currentGDPDataset.setEndYear(cd.getEndYear());
+                        currentGDPDataset.setName(cd.getName());
+                        
+                        for(CountryData countryData : cd.getCountryDataList()){
+                            CurrentGdp cGdp = new CurrentGdp();
+                            cGdp.setDataYear(countryData.getDataYear());
+                            cGdp.setValue(countryData.getValue());
+                            listCurrentGdp.add(cGdp);
+                        }
+                        
+                        controllerCurrentGDP.addCurrentGdp(listCurrentGdp);
+                        refreshGDPLabels();
+                        refreshGDPTable();
+                    
+                    } else if (cd.getDescription().contains("Oil")){
+                        
+                        
+                        currentOilDataset.setCountryCode(cd.getCountryCode());
+                        currentOilDataset.setCountryDataList(cd.getCountryDataList());
+                        currentOilDataset.setDescription(cd.getDescription());
+                        currentOilDataset.setStartYear(cd.getStartYear());
+                        currentOilDataset.setEndYear(cd.getEndYear());
+                        currentOilDataset.setName(cd.getName());
+                        
+                        for(CountryData countryData : cd.getCountryDataList()){
+                            CurrentOilData cOil = new CurrentOilData();
+                            cOil.setDataYear(countryData.getDataYear());
+                            cOil.setValue(countryData.getValue());
+                            listCurrentOil.add(cOil);
+                        }
+                        
+                        controllerOil.addCurrentOil(listCurrentOil);
+                        refreshOilLabels();
+                        refreshOilTable();
+
+                    }
+                }
+                
+                //If there was only one dataset in the DB 
+                if(r.size()==1){
+                    if(r.get(0).getDescription().contains("GDP")){
+                        controllerOil.deleteData();
+                        currentOilDataset = new CountryDataset();
+                        refreshOilLabels();
+                        refreshOilTable();
+                    }
+                    if(r.get(0).getDescription().contains("Oil")){
+                        controllerCurrentGDP.deleteData();
+                        currentGDPDataset = new CountryDataset();
+                        refreshGDPLabels();
+                        refreshGDPTable();
+                    }
+                }
+            }
+
 //            if(!controllerCountryDataset.isInTheDatabase(currentCountry)){//in case they don't exist
 //                JsonManager jm = new JsonManager();//Make the Api calls
 //                currentGDPDataset = jm.fetchGDP(currentCountry);//Get the GDP data
@@ -477,18 +621,122 @@ public class MainGui extends javax.swing.JFrame {
 //                //List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
 //                //System.out.println(r.get(0).getName());
 //            }
+
         }
     }//GEN-LAST:event_jButtonFetchActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         if(evt.getSource() == saveButton){
             ControllerCountryDataset controllerCountryDataset = new ControllerCountryDataset();
-            controllerCountryDataset.addCountryDataset(currentGDPDataset);
-            controllerCountryDataset.addCountryDataset(currentOilDataset);
+            
+            if(currentGDPDataset.getCountryCode()!= null){
+                controllerCountryDataset.addCountryDataset(currentGDPDataset);
+            }
+            if(currentOilDataset.getCountryCode()!= null){
+                controllerCountryDataset.addCountryDataset(currentOilDataset);
+            }
+            
+            
+            //Disable SAVE Button
+            saveButton.setEnabled(false);
+            //Check box to indicate that data exists in the DB
+            savedInDBCheckBox.setSelected(true);
 
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        if(evt.getSource() == deleteButton ){
+            //Display a confirmation Dialog
+            int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all Data", "Delete", JOptionPane.YES_NO_OPTION);
+            
+            //If answer was yes
+            if(option == 0){
+                ControllerCountryData controllerCountryData = new ControllerCountryData();
+                ControllerCountryDataset controllerCountryDataset = new ControllerCountryDataset();
+                
+                //Delete all Data
+                controllerCountryData.deleteData();
+                controllerCountryDataset.deleteData();
+                
+                //Update UI elements
+                saveButton.setEnabled(true);
+                savedInDBCheckBox.setSelected(false);
+            }
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotButtonActionPerformed
+//        if(evt.getSource() == plotButton){
+//            final String title = "Economic Data for " + currentCountry.getName();         
+//            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, currentCountry.getName());
+//                        
+//            demo.pack( );         
+//            RefineryUtilities.positionFrameRandomly( demo );         
+//            demo.setVisible( true );
+//            System.out.println(demo.getClass().getName());
+//            plot.pack();
+//            RefineryUtilities.centerFrameOnScreen(plot);
+//            plot.setVisible(true);
+//            plot.display();
+       // }
+
+    }//GEN-LAST:event_plotButtonActionPerformed
+
+    public void refreshGDPLabels(){
+        if(currentGDPDataset.getName() == null){//if no valid data were found inform the User
+            labelGDPDatasetName.setText("No Data Were Found");
+            labelGDPStart.setText(" ");
+            labelGDPEnd.setText(" ");
+                    
+            } else {
+            //Update Label Text to fit data
+            labelGDPDatasetName.setText(currentGDPDataset.getName());
+            labelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
+            labelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
+        }
+    }
+    
+    public void refreshOilLabels(){
+        if(currentOilDataset.getName() == null){//if no valid data were found inform the User
+            labelOilDatasetName.setText("No Data Were Found");
+            labelOilStart.setText(" ");
+            labelOilEnd.setText(" ");
+        } else {
+            labelOilDatasetName.setText(currentOilDataset.getName());
+            labelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
+            labelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
+
+        }
+    }
+    
+    public void refreshOilTable(){
+        currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c ORDER BY c.dataYear DESC");
+        currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding3 = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+        columnBinding3.setColumnName("Data Year");
+        columnBinding3.setColumnClass(String.class);
+        columnBinding3 = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+        columnBinding3.setColumnName("Value");
+        columnBinding3.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+    }
+    
+    public void refreshGDPTable(){
+        currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c ORDER BY c.dataYear DESC" );
+        currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
+        columnBinding.setColumnName("Data Year");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
+        columnBinding.setColumnName("Value");
+        columnBinding.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+    }
     /**
      * @param args the command line arguments
      */
@@ -496,11 +744,6 @@ public class MainGui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager EconometricaPUEntityManager;
-    private javax.swing.JLabel LabelGDPDatasetName;
-    private javax.swing.JLabel LabelGDPEnd;
-    private javax.swing.JLabel LabelGDPStart;
-    private javax.swing.JLabel LabelOilEnd;
-    private javax.swing.JLabel LabelOilStart;
     private java.util.List<model.Country> countryList;
     private javax.persistence.Query countryQuery;
     private javax.swing.JComboBox<String> countrySelector;
@@ -508,10 +751,8 @@ public class MainGui extends javax.swing.JFrame {
     private javax.persistence.Query currentGdpQuery;
     private java.util.List<model.CurrentOilData> currentOilDataList;
     private javax.persistence.Query currentOilDataQuery;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton jButtonFetch;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -531,8 +772,15 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableGDP;
     private javax.swing.JTable jTableOil;
+    private javax.swing.JLabel labelGDPDatasetName;
+    private javax.swing.JLabel labelGDPEnd;
+    private javax.swing.JLabel labelGDPStart;
     private javax.swing.JLabel labelOilDatasetName;
+    private javax.swing.JLabel labelOilEnd;
+    private javax.swing.JLabel labelOilStart;
+    private javax.swing.JButton plotButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JCheckBox savedInDBCheckBox;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
