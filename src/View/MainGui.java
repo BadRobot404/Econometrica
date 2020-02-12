@@ -19,25 +19,7 @@ import javax.swing.JOptionPane;
 import model.*;
 import remote.JsonManager;
 
-import java.awt.Color;
-import java.text.SimpleDateFormat;
-import javax.swing.JFrame;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.StandardXYToolTipGenerator;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.time.Year;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -68,7 +50,7 @@ public class MainGui extends javax.swing.JFrame {
                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
             }
         });
-        
+        //When applications starts SAVE button must be disabled
         saveButton.setEnabled(false);
         
         
@@ -462,25 +444,25 @@ public class MainGui extends javax.swing.JFrame {
                 //Make the Api calls
                 JsonManager jm = new JsonManager();
                 
-                //Uncheck box to indicate that data exists in the DB
+                //Uncheck box to indicate that data does not exist in the DB
                 savedInDBCheckBox.setSelected(false);
                                 
                 //Get the GDP data
                 currentGDPDataset = jm.fetchGDP(currentCountry);
                 
-                //Update Labels 
+                //Update GDP Labels 
                 refreshGDPLabels();
                 
-                //Update jTable in UI
+                //Update GDP jTable in UI
                 refreshGDPTable();
                 
                 //Get the Oil Data
                 currentOilDataset = jm.fetchOil(currentCountry);
                 
-                //Update Labels 
+                //Update Oil  Labels 
                 refreshOilLabels();
                 
-                //Update jTable in UI
+                //Update Oil jTable in UI
                 refreshOilTable();
 
                 //Enable SAVE button
@@ -548,7 +530,7 @@ public class MainGui extends javax.swing.JFrame {
                     }
                 }
                 
-                //If there was only one dataset in the DB 
+                //Case where there was only one dataset in the DB either GDP or Oil 
                 if(r.size()==1){
                     if(r.get(0).getDescription().contains("GDP")){
                         controllerOil.deleteData();
@@ -565,62 +547,7 @@ public class MainGui extends javax.swing.JFrame {
                 }
             }
 
-//            if(!controllerCountryDataset.isInTheDatabase(currentCountry)){//in case they don't exist
-//                JsonManager jm = new JsonManager();//Make the Api calls
-//                currentGDPDataset = jm.fetchGDP(currentCountry);//Get the GDP data
-//                if(currentGDPDataset == null){//if no valid data were found inform the User
-//                    LabelGDPDatasetName.setText("No Data Were Found");
-//                    LabelGDPStart.setText(" ");
-//                    LabelGDPEnd.setText(" ");
-//                    
-//                } else {
-//                    //Update Label Text to fit data
-//                    LabelGDPDatasetName.setText(currentGDPDataset.getName());
-//                    LabelGDPStart.setText(currentGDPDataset.getStartYear() + "-12-31");
-//                    LabelGDPEnd.setText(currentGDPDataset.getEndYear() + "-12-31");
-//
-//                }
-//                //Update jTable in UI
-//                currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c");
-//                currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
-//                org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
-//                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
-//                columnBinding.setColumnName("Data Year");
-//                columnBinding.setColumnClass(String.class);
-//                columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
-//                columnBinding.setColumnName("Value");
-//                columnBinding.setColumnClass(String.class);
-//                bindingGroup.addBinding(jTableBinding);
-//                jTableBinding.bind();
-//                
-//                currentOilDataset = jm.fetchOil(currentCountry);//Get the Oil Data
-//                if(currentOilDataset == null){//if no valid data were found inform the User
-//                    labelOilDatasetName.setText("No Data Were Found");
-//                    LabelOilStart.setText(" ");
-//                    LabelOilEnd.setText(" ");
-//                } else {
-//                    labelOilDatasetName.setText(currentOilDataset.getName());
-//                    LabelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
-//                    LabelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
-//
-//                }
-//                //Update jTable in UI
-//                currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c");
-//                currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
-//                org.jdesktop.swingbinding.JTableBinding jTableBinding1 = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
-//                org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataYear}"));
-//                columnBinding1.setColumnName("Data Year");
-//                columnBinding1.setColumnClass(String.class);
-//                columnBinding1 = jTableBinding1.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${value}"));
-//                columnBinding1.setColumnName("Value");
-//                columnBinding1.setColumnClass(String.class);
-//                bindingGroup.addBinding(jTableBinding1);
-//                jTableBinding1.bind();
-//                          
-//            } else {
-//                //List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
-//                //System.out.println(r.get(0).getName());
-//            }
+
 
         }
     }//GEN-LAST:event_jButtonFetchActionPerformed
@@ -629,10 +556,12 @@ public class MainGui extends javax.swing.JFrame {
         if(evt.getSource() == saveButton){
             ControllerCountryDataset controllerCountryDataset = new ControllerCountryDataset();
             
-            if(currentGDPDataset.getCountryCode()!= null){
+            if(currentGDPDataset.getCountryCode()!= null){//if GDP table was not empty
+                //Save table data to the Database
                 controllerCountryDataset.addCountryDataset(currentGDPDataset);
             }
-            if(currentOilDataset.getCountryCode()!= null){
+            if(currentOilDataset.getCountryCode()!= null){//if Oil table was not empty
+                //Save table data to the Database
                 controllerCountryDataset.addCountryDataset(currentOilDataset);
             }
             
@@ -703,6 +632,7 @@ public class MainGui extends javax.swing.JFrame {
             labelOilStart.setText(" ");
             labelOilEnd.setText(" ");
         } else {
+            //Update Label Text to fit data
             labelOilDatasetName.setText(currentOilDataset.getName());
             labelOilStart.setText(currentOilDataset.getStartYear() + "-12-31");
             labelOilEnd.setText(currentOilDataset.getEndYear() + "-12-31");
@@ -711,6 +641,7 @@ public class MainGui extends javax.swing.JFrame {
     }
     
     public void refreshOilTable(){
+        //Live table data have changed so i make a call to the database to get new Data and update the UI
         currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c ORDER BY c.dataYear DESC");
         currentOilDataList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentOilDataQuery.getResultList();
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentOilDataList, jTableOil);
@@ -725,6 +656,7 @@ public class MainGui extends javax.swing.JFrame {
     }
     
     public void refreshGDPTable(){
+        //Live table data have changed so i make a call to the database to get new Data and update the UI
         currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c ORDER BY c.dataYear DESC" );
         currentGdpList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : currentGdpQuery.getResultList();
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, currentGdpList, jTableGDP);
@@ -791,8 +723,10 @@ public void initializeData(){
         ControllerCountry controllerCountry = new ControllerCountry();
         
         try{
+            //Open the file
             BufferedReader br = new BufferedReader(new FileReader("src/resources/iso-countries.csv")); 
             String line;
+            //Parse records
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
                 records.add(Arrays.asList(values));
@@ -805,9 +739,12 @@ public void initializeData(){
         for (List<String> e :records){
             
             if (e.get(2).length() == 3){
+                //Extract iso 3 Name and full Name from parsed Data
                 Country country = new Country(e.get(2),e.get(0));
                 countryList.add(country);
+                //if Country was not already in the DB  
                 if(!controllerCountry.isInTheDatabase(country)){
+                    //Add Country name and iso code to the Database
                     controllerCountry.addCountry(country);
                 }
                 
