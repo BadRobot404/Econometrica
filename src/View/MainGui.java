@@ -485,6 +485,10 @@ public class MainGui extends javax.swing.JFrame {
                 //Disable SAVE button
                 saveButton.setEnabled(false);
                 
+                //Delete Old Data
+                controllerCurrentGDP.deleteData();
+                controllerOil.deleteData();
+                
                 //Copy the contents of the Database to the live tables.
                 for(CountryDataset cd : r){
                     if(cd.getDescription().contains("GDP")){
@@ -600,11 +604,12 @@ public class MainGui extends javax.swing.JFrame {
         if(evt.getSource() == plotButton){
             String properName = toCamelCase(currentCountry.getName());
             final String title = "Economic Data for " + properName;
-            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName);
-//                        
+            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName,currentGDPDataset,currentOilDataset);
+            
             demo.pack( );         
             RefineryUtilities.positionFrameRandomly( demo );         
             demo.setVisible( true );
+            
 //            System.out.println(demo.getClass().getName());
 //            plot.pack();
 //            RefineryUtilities.centerFrameOnScreen(plot);
