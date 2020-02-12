@@ -19,6 +19,26 @@ import javax.swing.JOptionPane;
 import model.*;
 import remote.JsonManager;
 
+import java.awt.Color;
+import java.text.SimpleDateFormat;
+import javax.swing.JFrame;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.time.Year;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+
 /**
  *
  * @author Bill
@@ -101,11 +121,12 @@ public class MainGui extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableGDP = new javax.swing.JTable();
         saveButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        plotButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         savedInDBCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Econometrica");
         setName("MainFrame"); // NOI18N
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -379,12 +400,17 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(saveButton, gridBagConstraints);
 
-        jButton3.setText("Plot");
+        plotButton.setText("Plot");
+        plotButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        getContentPane().add(jButton3, gridBagConstraints);
+        getContentPane().add(plotButton, gridBagConstraints);
 
         deleteButton.setText("DELETE ALL");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -399,6 +425,7 @@ public class MainGui extends javax.swing.JFrame {
         getContentPane().add(deleteButton, gridBagConstraints);
 
         savedInDBCheckBox.setText("Already Saved to Database");
+        savedInDBCheckBox.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
@@ -580,6 +607,23 @@ public class MainGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
+    private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotButtonActionPerformed
+//        if(evt.getSource() == plotButton){
+//            final String title = "Economic Data for " + currentCountry.getName();         
+//            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, currentCountry.getName());
+//                        
+//            demo.pack( );         
+//            RefineryUtilities.positionFrameRandomly( demo );         
+//            demo.setVisible( true );
+//            System.out.println(demo.getClass().getName());
+//            plot.pack();
+//            RefineryUtilities.centerFrameOnScreen(plot);
+//            plot.setVisible(true);
+//            plot.display();
+       // }
+
+    }//GEN-LAST:event_plotButtonActionPerformed
+
     public void refreshGDPLabels(){
         if(currentGDPDataset.getName() == null){//if no valid data were found inform the User
             labelGDPDatasetName.setText("No Data Were Found");
@@ -649,7 +693,6 @@ public class MainGui extends javax.swing.JFrame {
     private java.util.List<model.CurrentOilData> currentOilDataList;
     private javax.persistence.Query currentOilDataQuery;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButtonFetch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -676,6 +719,7 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel labelOilDatasetName;
     private javax.swing.JLabel labelOilEnd;
     private javax.swing.JLabel labelOilStart;
+    private javax.swing.JButton plotButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JCheckBox savedInDBCheckBox;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
