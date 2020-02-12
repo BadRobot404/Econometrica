@@ -17,6 +17,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import model.*;
+import org.jfree.ui.RefineryUtilities;
 import remote.JsonManager;
 
 
@@ -596,22 +597,37 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void plotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotButtonActionPerformed
-//        if(evt.getSource() == plotButton){
-//            final String title = "Economic Data for " + currentCountry.getName();         
-//            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, currentCountry.getName());
+        if(evt.getSource() == plotButton){
+            String properName = toCamelCase(currentCountry.getName());
+            final String title = "Economic Data for " + properName;
+            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName);
 //                        
-//            demo.pack( );         
-//            RefineryUtilities.positionFrameRandomly( demo );         
-//            demo.setVisible( true );
+            demo.pack( );         
+            RefineryUtilities.positionFrameRandomly( demo );         
+            demo.setVisible( true );
 //            System.out.println(demo.getClass().getName());
 //            plot.pack();
 //            RefineryUtilities.centerFrameOnScreen(plot);
 //            plot.setVisible(true);
 //            plot.display();
-       // }
+        }
 
     }//GEN-LAST:event_plotButtonActionPerformed
 
+static String toCamelCase(String s){
+    String[] parts = s.split(" ");
+    String camelCaseString = "";
+    for (String part : parts){
+        camelCaseString = camelCaseString + toProperCase(part) + " ";
+    }
+    return camelCaseString;
+}
+
+static String toProperCase(String s) {
+    return s.substring(0, 1).toUpperCase() +
+               s.substring(1).toLowerCase();
+}
+    
     public void refreshGDPLabels(){
         if(currentGDPDataset.getName() == null){//if no valid data were found inform the User
             labelGDPDatasetName.setText("No Data Were Found");

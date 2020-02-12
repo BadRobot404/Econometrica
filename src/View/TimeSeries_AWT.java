@@ -11,7 +11,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.ApplicationFrame; 
 import org.jfree.ui.RefineryUtilities;
 
-public class TimeSeries_AWT extends ApplicationFrame {
+public class TimeSeries_AWT extends javax.swing.JFrame {
     
     String countryName;
 
