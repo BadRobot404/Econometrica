@@ -71,7 +71,7 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        final XYDataset dataset = createDatasetGDP( );         
        
        //create simple chart
-       final JFreeChart chart = createChart( dataset );   
+       final JFreeChart chart = createChart( dataset, "GDP" );   
        //Add the second axis to the plot
        final XYPlot plot = chart.getXYPlot();
        final NumberAxis axis2 = new NumberAxis("Oil Consumption");
@@ -101,6 +101,51 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        chartPanel.setMouseZoomable( true , false );         
        setContentPane( chartPanel );
    }
+   
+   public TimeSeries_AWT( final String title, String countryName,CountryDataset dataGDP, String name) {
+       super( title );         
+       this.countryName = countryName;
+       this.dataGDP = dataGDP;
+       this.dataOil = null;
+       
+        //Define the format of the numbers to be displayed
+       DecimalFormat decimalFormat = new DecimalFormat("###,###.###");     
+       
+       //create GDP timeseries from Data
+       
+       final XYDataset dataset = createDatasetGDP( );         
+       
+       //create simple chart
+       final JFreeChart chart = createChart( dataset , name);   
+       //Add the second axis to the plot
+       final XYPlot plot = chart.getXYPlot();
+//       final NumberAxis axis2 = new NumberAxis("Oil Consumption");
+//       //set number format to both axes
+//       axis2.setNumberFormatOverride(decimalFormat);
+       NumberAxis axis1 =(NumberAxis)plot.getRangeAxis();
+       axis1.setNumberFormatOverride(decimalFormat);
+       //set range of the second axis
+       //plot.setRangeAxis(1, axis2);
+       //Create Oil timeseries from Data and add it to the chart 
+       //plot.setDataset(1, createDatasetOil());
+       //plot.mapDatasetToRangeAxis(1, 1);
+
+     
+       final StandardXYItemRenderer renderer2 = new StandardXYItemRenderer();
+       renderer2.setSeriesPaint(0, Color.blue);
+       renderer2.setSeriesShape(0,  new Ellipse2D.Double(-3, -3, 6, 6));
+       plot.setRenderer(1, renderer2);
+
+
+       final DateAxis axis = (DateAxis) plot.getDomainAxis();
+       axis.setDateFormatOverride(new SimpleDateFormat("yyyy"));
+       final ChartPanel chartPanel = new ChartPanel(chart);
+       chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+       
+       chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 370 ) );         
+       chartPanel.setMouseZoomable( true , false );         
+       setContentPane( chartPanel );
+   }
 
       
    private XYDataset createDatasetGDP( ) {
@@ -109,7 +154,7 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
       int startYear = Integer.parseInt(dataGDP.getEndYear());
       int size = dataGDP.getCountryDataList().size();
       Year current = new Year(startYear);         
-      double value = 100.0;         
+      double value ;         
       
       for (int i = 0; i < size; i++) {
          
@@ -130,7 +175,7 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
       int startYear = Integer.parseInt(dataOil.getEndYear());
       int size = dataOil.getCountryDataList().size();
       Year current = new Year(startYear);         
-      double value = 100.0;         
+      double value;         
       
       for (int i = 0; i < size; i++) {
          
@@ -146,11 +191,11 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
       return new TimeSeriesCollection(series);
    }     
 
-   private JFreeChart createChart( final XYDataset dataset ) {
+   private JFreeChart createChart( final XYDataset dataset , String title) {
       return ChartFactory.createTimeSeriesChart(             
          "Economic Data for " + countryName, 
          "Time",              
-         "GDP",              
+         title,              
          dataset,             
          true,              
          true,              

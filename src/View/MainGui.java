@@ -604,11 +604,29 @@ public class MainGui extends javax.swing.JFrame {
         if(evt.getSource() == plotButton){
             String properName = toCamelCase(currentCountry.getName());
             final String title = "Economic Data for " + properName;
-            final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName,currentGDPDataset,currentOilDataset);
+                        
+            if(currentGDPDataset.getName() == null && currentOilDataset.getName() == null){
+                JOptionPane.showMessageDialog(this, "No valid data were available to plot");
+            }else if(currentGDPDataset.getName() == null){
+                final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName,currentOilDataset, "Oil");
+                demo.pack( );         
+                RefineryUtilities.positionFrameRandomly( demo );         
+                demo.setVisible( true );
+            } else if (currentOilDataset.getName() == null){
+                final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName,currentGDPDataset, "GDP");
+                demo.pack( );         
+                RefineryUtilities.positionFrameRandomly( demo );         
+                demo.setVisible( true );
+            }
+            else{
             
-            demo.pack( );         
-            RefineryUtilities.positionFrameRandomly( demo );         
-            demo.setVisible( true );
+                final view.TimeSeries_AWT demo = new view.TimeSeries_AWT( title, properName,currentGDPDataset,currentOilDataset);
+                demo.pack( );         
+                RefineryUtilities.positionFrameRandomly( demo );         
+                demo.setVisible( true );
+            }
+            
+            
             
 //            System.out.println(demo.getClass().getName());
 //            plot.pack();
