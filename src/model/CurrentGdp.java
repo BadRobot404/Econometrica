@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "CurrentGdp.findById", query = "SELECT c FROM CurrentGdp c WHERE c.id = :id")
     , @NamedQuery(name = "CurrentGdp.findByDataYear", query = "SELECT c FROM CurrentGdp c WHERE c.dataYear = :dataYear")
     , @NamedQuery(name = "CurrentGdp.findByValue", query = "SELECT c FROM CurrentGdp c WHERE c.value = :value")
+    //One line added to the auto generated code
     , @NamedQuery(name = "CurrentGdp.deleteAll", query = "DELETE  FROM CurrentGdp ")})
 public class CurrentGdp implements Serializable {
 

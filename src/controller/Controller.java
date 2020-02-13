@@ -8,26 +8,30 @@ import remote.DbConnector;
 /** 
  * Τμήμα ΗΛΕ 43
  * @author ΒΑΣΙΛΗΣ ΤΣΑΠΑΡΙΚΟΣ - 114307
- * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛΟΒΕΝΤΗ - 126971
+ * @author ΑΙΚΑΤΕΡΙΝΗ ΚΟΛΕΒΕΝΤΗ - 126971
  * @author ΑΡΙΣΤΕΙΔΗΣ ΦΑΣΟΥΛΑΣ - 100318
  */
 
 public abstract class Controller
 {
-    //χρησιμοποιούμε static για να έχουμε τον ίδιο entity manager καθ' όλη τη διάρκεια της εκτέλεσης
+    
     protected static EntityManager em;
     
     public Controller()
     {
         if (em == null)
         {
-            /*Σύνδεση με τη βάση, δημιουργία entity factory και entity manager*/
+            /*Make a database connection, create an entity factory and an entity manager*/
             DbConnector.connect();
             em = DbConnector.getEm();
         }
     }
     
-    //μέθοδος διαγραφής πίνακα μέσω ενός έτοιμου namedQuery.
+    //Method to delete a table though a namedQuery.
+    /**
+     * 
+     * @param namedQuery The Query to be executed
+     */
     protected void clearTbl(String namedQuery)
     {
         try 

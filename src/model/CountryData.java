@@ -24,7 +24,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * 
  * @author Bill
  */
 @Entity
@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "CountryData.findByDataYear", query = "SELECT c FROM CountryData c WHERE c.dataYear = :dataYear")
     , @NamedQuery(name = "CountryData.findByValue", query = "SELECT c FROM CountryData c WHERE c.value = :value")
     , @NamedQuery(name = "CountryData.findByDataId", query = "SELECT c FROM CountryData c WHERE c.dataId = :dataId")
+    // One line added
     , @NamedQuery(name = "CountryData.deleteAll", query = "DELETE  FROM CountryData ")})
 public class CountryData implements Serializable {
 

@@ -16,7 +16,10 @@ public class ControllerCurrentOilData extends Controller{
     {
         super();
     }
-    
+    /**
+     * 
+     * @param c a list of CyrrentOilData to be inserted into the Database
+     */
     public void addCurrentOil(List<CurrentOilData>  c){
         for(CurrentOilData cc : c){
             em.getTransaction().begin();
@@ -25,14 +28,16 @@ public class ControllerCurrentOilData extends Controller{
         }
         
     }
-    
+    /**
+     * A method to delete all data in the Table
+     */
     public void deleteData(){
         clearTbl("CurrentOil.deleteAll");
     }
            
     @Override
         protected void clearTable() {
-        clearTbl("City.deleteAll");
+        clearTbl("CurrentOil.deleteAll");
     }
     
 }

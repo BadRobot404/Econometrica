@@ -6,12 +6,8 @@
  */
 package controller;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
-import model.CountryData;
 import model.CurrentGdp;
 
 
@@ -21,7 +17,10 @@ public class ControllerCurrentGDP extends Controller{
     {
         super();
     }
-    
+    /**
+     * 
+     * @param c A list of CurrentGDP objects to be inserted to the Database
+     */
     public void addCurrentGdp(List<CurrentGdp>  c){
         for(CurrentGdp cc : c){
             em.getTransaction().begin();
@@ -30,14 +29,16 @@ public class ControllerCurrentGDP extends Controller{
         }
         
     }
-    
+    /**
+     * Method to delete all Data in the Table
+     */
     public void deleteData(){
         clearTbl("CurrentGdp.deleteAll");
     }
            
     @Override
         protected void clearTable() {
-        clearTbl("City.deleteAll");
+        clearTbl("CurrentGdp.deleteAll");
     }
     
 }

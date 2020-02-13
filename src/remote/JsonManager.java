@@ -26,51 +26,45 @@ import java.util.List;
 
 public class JsonManager
 {
-    
-    
-    
-                
     private static String apiKey;
     
-    
+    //Constructor 
     public JsonManager()
     {
         this.apiKey = "f3uK5mxjS8rPxPFyJ8fy";
     }
     
-    /*Επιστρέφει τα στοιχεία για το ΑΕΠ χώρα*/
-    public CountryDataset fetchGDP(Country ct)
+    /*Makes an API Call and parses GDP Data*/
+    /**
+     * @param c Country 
+     * @return GDP Data for the Country c in a CountryDataset Object format
+     */
+    public CountryDataset fetchGDP(Country c)
     {
         CountryDataset cd = new CountryDataset();
-        
-        
-        
+               
         List<CountryData> listCountryData = new ArrayList<CountryData>();
         List<CurrentGdp> listCurrentGdp = new ArrayList<CurrentGdp>();
         ControllerCurrentGDP controllerGDP = new ControllerCurrentGDP();
-        
-        
+                
         try
         {
-            /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
-            URL url = new URL(createUrlString(ct.getIsoCode(),"GDP"));
+            /*Construction of URL to be used for the API Call*/
+            URL url = new URL(createUrlString(c.getIsoCode(),"GDP"));
             
-            /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
+            /*Make a connection and save data to stream is */          
             InputStream is = url.openStream(); 
             
-            /*Διαβάζει τη ροή και μετατρέπει τα εισερχόμενα bytes σε χαρακτήρες.*/
+            /*Read stream */
             InputStreamReader isr = new InputStreamReader(is);                              
             
-            /*Αναλύει την αρχική δομή του json που βρίσκεται στο isr, και επιστρέφει ένα JsonElement το οποίο μπορεί να είναι
-            ένα  JsonObject, JsonArray, JsonPrimitive ή ένα JsonNull.*/
+            /*Parse read data as a JSON Element*/
             JsonElement jElement = new JsonParser().parse(isr);
             
-            /*εμείς γνωρίζουμε οτι είναι ένα JsonObject οπότε το αποθηκεύουμε σε μια αναφορά mainJsonObject*/   
+            /*Get the main JSON Object to be parsed*/   
             JsonObject mainJsonObject = jElement.getAsJsonObject(); 
                    
-            
-                                
-            
+            //Get the root of the tree as a starting point to the parsing            
              mainJsonObject = mainJsonObject.get("dataset").getAsJsonObject();
              //Parse the name of the dataset
              cd.setName(mainJsonObject.get("name").getAsString());
@@ -79,26 +73,26 @@ public class JsonManager
              //Parse the end date of the dataset
              cd.setEndYear(mainJsonObject.get("end_date").getAsString().substring(0, 4));
              //Set the foreign key 
-             cd.setCountryCode(ct);
+             cd.setCountryCode(c);
              // Parse the Description
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
-
              //Parse Dataset entries
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
+                 
                  //Parse Country Data entry
                  CountryData cData = new CountryData();
                  cData.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cData.setValue(e.getAsJsonArray().get(1).getAsString());    
                  cData.setDataset(cd);
                  listCountryData.add(cData);
+                 
                  //Update table that stores current GDP
                  CurrentGdp cGdp = new CurrentGdp();
                  cGdp.setDataYear(e.getAsJsonArray().get(0).getAsString().substring(0, 4));
                  cGdp.setValue(e.getAsJsonArray().get(1).getAsString());
                  listCurrentGdp.add(cGdp);
-                 
-             }
+            }
              cd.setCountryDataList(listCountryData);
              
              //Delete all entries in table currentGDP  
@@ -115,9 +109,7 @@ public class JsonManager
         {
             controllerGDP.deleteData();
             return new CountryDataset();
-            //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
 
         return cd;
     }
@@ -125,34 +117,29 @@ public class JsonManager
 public CountryDataset fetchOil(Country ct)
     {
         CountryDataset cd = new CountryDataset();
-        
-        
+                
         List<CountryData> listCountryData = new ArrayList<CountryData>();
         List<CurrentOilData> listCurrentOil = new ArrayList<CurrentOilData>();
         ControllerCurrentOilData controllerOil = new ControllerCurrentOilData();
         
         try
         {
-            /*κατασκευή ενός URL για το ερώτημα JSON weather now*/
+            /*Construction of URL to be used for the API Call*/
             URL url = new URL(createUrlString(ct.getIsoCode(),"Oil"));
             
-            /*Ξεκινάει τη σύνδεση με τον server και αποθηκεύει τα δεδομένα στη ροή δεδομένων "is".*/          
+            /*Make a connection and save data to stream is */          
             InputStream is = url.openStream(); 
             
-            /*Διαβάζει τη ροή και μετατρέπει τα εισερχόμενα bytes σε χαρακτήρες.*/
+            /*Read stream */
             InputStreamReader isr = new InputStreamReader(is);                              
             
-            /*Αναλύει την αρχική δομή του json που βρίσκεται στο isr, και επιστρέφει ένα JsonElement το οποίο μπορεί να είναι
-            ένα  JsonObject, JsonArray, JsonPrimitive ή ένα JsonNull.*/
+            /*Parse read data as a JSON Element*/
             JsonElement jElement = new JsonParser().parse(isr);
             
-            /*εμείς γνωρίζουμε οτι είναι ένα JsonObject οπότε το αποθηκεύουμε σε μια αναφορά mainJsonObject*/   
+            /*Get the main JSON Object to be parsed*/   
             JsonObject mainJsonObject = jElement.getAsJsonObject(); 
             
-            
-            
-                       
-            
+            //Get the root of the tree as a starting point to the parsing                       
              mainJsonObject = mainJsonObject.get("dataset").getAsJsonObject();
              //Parse the name of the dataset
              cd.setName(mainJsonObject.get("name").getAsString());
@@ -165,7 +152,6 @@ public CountryDataset fetchOil(Country ct)
              // Parse the Description
              cd.setDescription(mainJsonObject.get("description").getAsString());
              
-                          
              for (JsonElement e : mainJsonObject.get("data").getAsJsonArray()){
                 //Parse Data entry 
                  CountryData cData = new CountryData();
@@ -185,10 +171,7 @@ public CountryDataset fetchOil(Country ct)
              controllerOil.deleteData();
              //Commit new Data to table Current Oil
              controllerOil.addCurrentOil(listCurrentOil);            
-                          
-              
-             
-            
+                        
             } 
         catch (MalformedURLException ex)
         {
@@ -198,16 +181,19 @@ public CountryDataset fetchOil(Country ct)
         {
             controllerOil.deleteData();
             return new CountryDataset();
-            //Logger.getLogger(JsonManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-
-        
+      
         return cd;
     }
         
    
-    /*Κατασκευή κατάλληλου URL String για το API Request*/
+    /*Construct URL for API Request*/
+    /**
+     * 
+     * @param isoCode A string containing the alpha 3 iso code of the Country
+     * @param type A string defining the type of data, GDP or Oil to be requested
+     * @return A string containing the URL to be used in the API Call
+     */
     private String createUrlString(String isoCode,String type)
     {
         String prefix = "";
@@ -219,11 +205,11 @@ public CountryDataset fetchOil(Country ct)
             prefix = "https://www.quandl.com/api/v3/datasets/BP/OIL_CONSUM_";
             postfix = ".json?api_key=";
         }
-        
-        String request = prefix + isoCode + postfix + apiKey;
-        
-        return (request);
+                
+        return (prefix + isoCode + postfix + apiKey);
     }
+    
+    /*Setters and Getters*/
     
     public static void setApiKey(String _apiKey)
     {

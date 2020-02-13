@@ -6,10 +6,6 @@
  */
 package controller;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import model.CountryData;
 
@@ -20,21 +16,25 @@ public class ControllerCountryData extends Controller{
     {
         super();
     }
-    
+    /**
+     * 
+     * @param c a list of CountryData to be added to the database
+     */
     public void addCountryData(List<CountryData>  c){
         for(CountryData cc : c){
             em.getTransaction().begin();
             em.persist(cc);
             em.getTransaction().commit();
         }
-        
     }
     
+    /**
+     * Method that erases all Data in the Table
+     */
     public void deleteData(){
         clearTbl("CountryData.deleteAll");
     }
     
-           
     @Override
         protected void clearTable() {
         clearTbl("City.deleteAll");

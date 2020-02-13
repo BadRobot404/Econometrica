@@ -7,11 +7,6 @@
 package controller;
 
 import static controller.Controller.em;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.persistence.Query;
 import model.Country;
 
@@ -23,12 +18,21 @@ public class ControllerCountry extends Controller{
         super();
     }
     
+    /**
+     * 
+     * @param c The Country to be added to the Database
+     */
     public void addCountry(Country c){
         em.getTransaction().begin();
         em.persist(c);
         em.getTransaction().commit();
     }
-    
+    /**
+     * 
+     * @param c a Country
+     * @return True or False depending whether the country exists 
+     *         of not in the database
+     */
     public boolean isInTheDatabase(Country c){
         
         Query query = em.createNamedQuery("Country.findByIsoCode");

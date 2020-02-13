@@ -19,7 +19,7 @@ public final class DbConnector
     private static EntityManagerFactory emf;
     private static EntityManager em;
     
-    //Μηνύματα
+    //Messages
     private static final String errDBConn = "Αποτυχία σύνδεσης με τη Βάση Δεδομένων!";
     
     public static void connect()
@@ -28,7 +28,7 @@ public final class DbConnector
         {
             try 
             {
-                //δημιουργία Entity Manager που θα χρησιμοποιηθεί καθ όλη τη διάρκεια εκτέλεσης της εφαρμογής.
+                //Construction of an Entity Manager to be used in the application.
                 emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
                 em = emf.createEntityManager(); 
             } 

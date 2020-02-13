@@ -24,6 +24,10 @@ public class ControllerCountryDataset extends Controller{
     {
         super();
     }
+    /**
+     * 
+     * @param cd A CountryDataset object to be added in the Database
+     */
     public void addCountryDataset(CountryDataset cd){
         em.getTransaction().begin();
         em.persist(cd);
@@ -32,7 +36,11 @@ public class ControllerCountryDataset extends Controller{
         }
         em.getTransaction().commit();
     }
-    
+    /**
+     * 
+     * @param c A Country 
+     * @return  True/False whether said country has data in the Database or not
+     */
     public boolean isInTheDatabase(Country c){
         
         Query query = em.createNamedQuery("CountryDataset.findByCountryCode");
@@ -40,6 +48,12 @@ public class ControllerCountryDataset extends Controller{
         
         return !query.getResultList().isEmpty();
     }
+    /**
+     * 
+     * @param c A Country
+     * @return A list of CountryDataset objects containing 
+     *         all data of Country c
+     */
     public List<CountryDataset> selectByCountryName(Country c){
         
         Query query = em.createNamedQuery("CountryDataset.findByCountryCode");
@@ -48,6 +62,9 @@ public class ControllerCountryDataset extends Controller{
         return query.getResultList();
     }
     
+    /**
+     *  Method to delete all data in the Table
+     */
     public void deleteData(){
         clearTbl("CountryDataset.deleteAll");
     }

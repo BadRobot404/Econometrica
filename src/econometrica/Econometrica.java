@@ -46,12 +46,14 @@ public class Econometrica {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
+                //Delete any data left in the two live tables
                 ControllerCurrentGDP controllerCurrentGDP = new ControllerCurrentGDP();
                 controllerCurrentGDP.deleteData();
                 
                 ControllerCurrentOilData controllerCurrentOil = new ControllerCurrentOilData();
                 controllerCurrentOil.deleteData();
                 
+                //Create a UI and display it
                 new MainGui().setVisible(true);
                
             }

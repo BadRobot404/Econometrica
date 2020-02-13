@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "CurrentOilData.findById", query = "SELECT c FROM CurrentOilData c WHERE c.id = :id")
     , @NamedQuery(name = "CurrentOilData.findByDataYear", query = "SELECT c FROM CurrentOilData c WHERE c.dataYear = :dataYear")
     , @NamedQuery(name = "CurrentOilData.findByValue", query = "SELECT c FROM CurrentOilData c WHERE c.value = :value")
+    //One line added to the auto generated code
     , @NamedQuery(name = "CurrentOil.deleteAll", query = "DELETE  FROM CurrentOilData ")})
 public class CurrentOilData implements Serializable {
 
