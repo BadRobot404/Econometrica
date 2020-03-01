@@ -425,8 +425,6 @@ public class MainGui extends javax.swing.JFrame {
         if(evt.getSource()== countrySelector){
             //Get the selected Country
             currentCountry = (Country) countrySelector.getSelectedItem();
-            
-            
         }
     }//GEN-LAST:event_countrySelectorItemStateChanged
 
@@ -462,6 +460,7 @@ public class MainGui extends javax.swing.JFrame {
                 //Update Oil jTable in UI
                 refreshOilTable();
                 
+                // Enable Save and DELETE button only when there is at least one dataset
                 if(currentGDPDataset.getName()!= null || currentOilDataset.getName() != null){
                     //Enable SAVE button
                     saveButton.setEnabled(true);
@@ -477,7 +476,7 @@ public class MainGui extends javax.swing.JFrame {
                 }
                                 
                 
-            } else {
+            } else { //Data are present in the database
                 
                                 
                 List<CountryDataset> r = controllerCountryDataset.selectByCountryName(currentCountry);
@@ -613,7 +612,8 @@ public class MainGui extends javax.swing.JFrame {
         if(evt.getSource() == plotButton){
             String properName = toCamelCase(currentCountry.getName());
             final String title = "Economic Data for " + properName;
-                        
+            
+            //Call timeseries function to make the plot depending on the number of valid Datasets
             if(currentGDPDataset.getName() == null && currentOilDataset.getName() == null){
                 JOptionPane.showMessageDialog(this, "No valid data were available to plot");
             }else if(currentGDPDataset.getName() == null){
@@ -634,14 +634,13 @@ public class MainGui extends javax.swing.JFrame {
                 RefineryUtilities.positionFrameRandomly( demo );         
                 demo.setVisible( true );
             }
-            
-         
-            
-
         }
-
     }//GEN-LAST:event_plotButtonActionPerformed
-
+/**
+ * 
+ * @param s a String
+ * @return The string written in CamelCase format
+ */
 static String toCamelCase(String s){
     String[] parts = s.split(" ");
     String camelCaseString = "";
@@ -651,11 +650,19 @@ static String toCamelCase(String s){
     return camelCaseString;
 }
 
+/**
+ * 
+ * @param s a string
+ * @return The string with the first letter Capitalized
+ */
 static String toProperCase(String s) {
     return s.substring(0, 1).toUpperCase() +
                s.substring(1).toLowerCase();
 }
     
+/**
+* Updates labels for the GDP Data 
+*/
     public void refreshGDPLabels(){
         if(currentGDPDataset.getName() == null){//if no valid data were found inform the User
             labelGDPDatasetName.setText("No Data Were Found");
@@ -670,6 +677,9 @@ static String toProperCase(String s) {
         }
     }
     
+/**
+ * Updates Label text for Oil data
+ */
     public void refreshOilLabels(){
         if(currentOilDataset.getName() == null){//if no valid data were found inform the User
             labelOilDatasetName.setText("No Data Were Found");
@@ -683,7 +693,9 @@ static String toProperCase(String s) {
 
         }
     }
-    
+/**
+ * Updates UI when Oil data were changed
+ */    
     public void refreshOilTable(){
         //Live table data have changed so i make a call to the database to get new Data and update the UI
         currentOilDataQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentOilData c ORDER BY c.dataYear DESC");
@@ -698,7 +710,10 @@ static String toProperCase(String s) {
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
     }
-    
+
+/**
+ * Updates UI when GDP data were changed
+ */    
     public void refreshGDPTable(){
         //Live table data have changed so i make a call to the database to get new Data and update the UI
         currentGdpQuery = java.beans.Beans.isDesignTime() ? null : EconometricaPUEntityManager.createQuery("SELECT c FROM CurrentGdp c ORDER BY c.dataYear DESC" );
@@ -713,9 +728,7 @@ static String toProperCase(String s) {
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
     }
-    /**
-     * @param args the command line arguments
-     */
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -760,7 +773,9 @@ static String toProperCase(String s) {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-
+/**
+ * Read the country names from the CSV file and update Database
+ */
 public void initializeData(){
         List<List<String>> records = new ArrayList<>();
         List<Country> countryList = new ArrayList<>();

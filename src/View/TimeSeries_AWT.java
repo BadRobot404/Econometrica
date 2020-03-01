@@ -31,7 +31,13 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
         this.dataGDP = dataGDP;
     }
     
-
+/**
+ * 
+ * @param title the title of the Chart
+ * @param countryName The Country name
+ * @param dataGDP GDP data to be plotted
+ * @param dataOil Oil data to be plotted
+ */
    public TimeSeries_AWT( final String title, String countryName,CountryDataset dataGDP,CountryDataset dataOil) {
        super( title );         
        this.countryName = countryName;
@@ -42,7 +48,6 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        DecimalFormat decimalFormat = new DecimalFormat("###,###.###");     
        
        //create GDP timeseries from Data
-       
        final XYDataset dataset = createDatasetGDP( );         
        
        //create simple chart
@@ -54,28 +59,34 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        axis2.setNumberFormatOverride(decimalFormat);
        NumberAxis axis1 =(NumberAxis)plot.getRangeAxis();
        axis1.setNumberFormatOverride(decimalFormat);
+       //set renderer to spline
        final XYSplineRenderer renderer1 = new XYSplineRenderer();
        plot.setRenderer(0, renderer1);
-        //set range of the second axis
+       //set range of the second axis
        plot.setRangeAxis(1, axis2);
        //Create Oil timeseries from Data and add it to the chart 
        plot.setDataset(1, createDatasetOil());
        plot.mapDatasetToRangeAxis(1, 1);
-
+       //set renderer to spline for the second plot
        final XYSplineRenderer renderer2 = new XYSplineRenderer();
        renderer2.setSeriesPaint(0, Color.blue);
        plot.setRenderer(1, renderer2);
-       
+       //set x axis format
        final DateAxis axis = (DateAxis) plot.getDomainAxis();
        axis.setDateFormatOverride(new SimpleDateFormat("yyyy"));
        final ChartPanel chartPanel = new ChartPanel(chart);
        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-       
        chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 370 ) );         
        chartPanel.setMouseZoomable( true , false );         
        setContentPane( chartPanel );
    }
-   
+   /**
+    * 
+    * @param title title of the plot
+    * @param countryName the Country name
+    * @param dataGDP data to be plotted
+    * @param name Type of data (GDP or Oil) present
+    */
    public TimeSeries_AWT( final String title, String countryName,CountryDataset dataGDP, String name) {
        super( title );         
        this.countryName = countryName;
@@ -97,12 +108,12 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        NumberAxis axis1 =(NumberAxis)plot.getRangeAxis();
        axis1.setNumberFormatOverride(decimalFormat);
        
-     
+       //set renderer to spline
        final XYSplineRenderer renderer2 = new XYSplineRenderer();
        renderer2.setSeriesPaint(0, Color.blue);
        plot.setRenderer(0, renderer2);
 
-
+       //set x axis format
        final DateAxis axis = (DateAxis) plot.getDomainAxis();
        axis.setDateFormatOverride(new SimpleDateFormat("yyyy"));
        final ChartPanel chartPanel = new ChartPanel(chart);
@@ -113,7 +124,10 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        setContentPane( chartPanel );
    }
 
-      
+/**
+ * 
+ * @return a XYDataset containing GDP data in an appropriate format
+ */      
    private XYDataset createDatasetGDP( ) {
 
       final TimeSeries series = new TimeSeries( "GDP" );         
