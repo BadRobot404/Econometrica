@@ -1,47 +1,22 @@
 package view;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.geom.Ellipse2D;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.CountryDataset;
 import org.jfree.chart.ChartFactory; 
 import org.jfree.chart.ChartPanel; 
 import org.jfree.chart.JFreeChart; 
-import org.jfree.chart.LegendItem;
-import org.jfree.chart.LegendItemCollection;
-import org.jfree.chart.LegendItemSource;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.StandardXYToolTipGenerator;
-import org.jfree.chart.plot.Marker;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.general.SeriesException; 
 import org.jfree.data.time.Year; 
 import org.jfree.data.time.TimeSeries; 
 import org.jfree.data.time.TimeSeriesCollection; 
 import org.jfree.data.xy.XYDataset; 
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame; 
-import org.jfree.ui.RectangleAnchor;
-import org.jfree.ui.RefineryUtilities;
-import org.jfree.ui.TextAnchor;
-import org.jfree.util.ShapeUtilities;
+
 
 public class TimeSeries_AWT extends javax.swing.JFrame {
     
@@ -79,19 +54,18 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        axis2.setNumberFormatOverride(decimalFormat);
        NumberAxis axis1 =(NumberAxis)plot.getRangeAxis();
        axis1.setNumberFormatOverride(decimalFormat);
-       //set range of the second axis
+       final XYSplineRenderer renderer1 = new XYSplineRenderer();
+       plot.setRenderer(0, renderer1);
+        //set range of the second axis
        plot.setRangeAxis(1, axis2);
        //Create Oil timeseries from Data and add it to the chart 
        plot.setDataset(1, createDatasetOil());
        plot.mapDatasetToRangeAxis(1, 1);
 
-     
-       final StandardXYItemRenderer renderer2 = new StandardXYItemRenderer();
+       final XYSplineRenderer renderer2 = new XYSplineRenderer();
        renderer2.setSeriesPaint(0, Color.blue);
-       renderer2.setSeriesShape(0,  new Ellipse2D.Double(-3, -3, 6, 6));
        plot.setRenderer(1, renderer2);
-
-
+       
        final DateAxis axis = (DateAxis) plot.getDomainAxis();
        axis.setDateFormatOverride(new SimpleDateFormat("yyyy"));
        final ChartPanel chartPanel = new ChartPanel(chart);
@@ -119,22 +93,14 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
        final JFreeChart chart = createChart( dataset , name);   
        //Add the second axis to the plot
        final XYPlot plot = chart.getXYPlot();
-//       final NumberAxis axis2 = new NumberAxis("Oil Consumption");
-//       //set number format to both axes
-//       axis2.setNumberFormatOverride(decimalFormat);
+
        NumberAxis axis1 =(NumberAxis)plot.getRangeAxis();
        axis1.setNumberFormatOverride(decimalFormat);
-       //set range of the second axis
-       //plot.setRangeAxis(1, axis2);
-       //Create Oil timeseries from Data and add it to the chart 
-       //plot.setDataset(1, createDatasetOil());
-       //plot.mapDatasetToRangeAxis(1, 1);
-
+       
      
-       final StandardXYItemRenderer renderer2 = new StandardXYItemRenderer();
+       final XYSplineRenderer renderer2 = new XYSplineRenderer();
        renderer2.setSeriesPaint(0, Color.blue);
-       renderer2.setSeriesShape(0,  new Ellipse2D.Double(-3, -3, 6, 6));
-       plot.setRenderer(1, renderer2);
+       plot.setRenderer(0, renderer2);
 
 
        final DateAxis axis = (DateAxis) plot.getDomainAxis();
@@ -202,11 +168,4 @@ public class TimeSeries_AWT extends javax.swing.JFrame {
          false);
    }
 
-   public static void main( final String[ ] args ) {
-      final String title = "Time Series Management";         
-      //final TimeSeries_AWT demo = new TimeSeries_AWT( title, "bla bla");         
-      //demo.pack( );         
-      //RefineryUtilities.positionFrameRandomly( demo );         
-      //demo.setVisible( true );
-   }
 }   

@@ -36,9 +36,10 @@ public class MainGui extends javax.swing.JFrame {
     private Country currentCountry = new Country();
     
     public MainGui() {
+        initializeData();
         initComponents();
         //Read contents of CSV file and update DB if necessary
-        initializeData();
+                
         //Renderer for the binding of Country Selector 
         countrySelector.setRenderer(new DefaultListCellRenderer(){
             @Override
@@ -52,7 +53,7 @@ public class MainGui extends javax.swing.JFrame {
             }
         });
         //When applications starts SAVE button must be disabled
-        saveButton.setEnabled(false);
+        
         
         
         
@@ -122,11 +123,6 @@ public class MainGui extends javax.swing.JFrame {
         countrySelector.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 countrySelectorItemStateChanged(evt);
-            }
-        });
-        countrySelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                countrySelectorActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -370,6 +366,7 @@ public class MainGui extends javax.swing.JFrame {
         getContentPane().add(jPanel2, gridBagConstraints);
 
         saveButton.setText("Save");
+        saveButton.setEnabled(false);
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
@@ -384,6 +381,7 @@ public class MainGui extends javax.swing.JFrame {
         getContentPane().add(saveButton, gridBagConstraints);
 
         plotButton.setText("Plot");
+        plotButton.setEnabled(false);
         plotButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 plotButtonActionPerformed(evt);
@@ -396,6 +394,7 @@ public class MainGui extends javax.swing.JFrame {
         getContentPane().add(plotButton, gridBagConstraints);
 
         deleteButton.setText("DELETE ALL");
+        deleteButton.setEnabled(false);
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteButtonActionPerformed(evt);
@@ -407,6 +406,7 @@ public class MainGui extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         getContentPane().add(deleteButton, gridBagConstraints);
 
+        savedInDBCheckBox.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         savedInDBCheckBox.setText("Already Saved to Database");
         savedInDBCheckBox.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -421,13 +421,9 @@ public class MainGui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void countrySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countrySelectorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_countrySelectorActionPerformed
-
     private void countrySelectorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_countrySelectorItemStateChanged
         if(evt.getSource()== countrySelector){
-            
+            //Get the selected Country
             currentCountry = (Country) countrySelector.getSelectedItem();
             
             
@@ -465,10 +461,21 @@ public class MainGui extends javax.swing.JFrame {
                 
                 //Update Oil jTable in UI
                 refreshOilTable();
-
-                //Enable SAVE button
-                saveButton.setEnabled(true);
                 
+                if(currentGDPDataset.getName()!= null || currentOilDataset.getName() != null){
+                    //Enable SAVE button
+                    saveButton.setEnabled(true);
+                
+                    //Enable Plot Button
+                    plotButton.setEnabled(true);
+                } else {
+                    //Disable SAVE button
+                    saveButton.setEnabled(false);
+                
+                    //Disable Plot Button
+                    plotButton.setEnabled(false);
+                }
+                                
                 
             } else {
                 
@@ -569,10 +576,11 @@ public class MainGui extends javax.swing.JFrame {
                 //Save table data to the Database
                 controllerCountryDataset.addCountryDataset(currentOilDataset);
             }
-            
-            
+                        
             //Disable SAVE Button
             saveButton.setEnabled(false);
+            //Enable Delete ALL Button
+            deleteButton.setEnabled(true);
             //Check box to indicate that data exists in the DB
             savedInDBCheckBox.setSelected(true);
 
@@ -596,6 +604,7 @@ public class MainGui extends javax.swing.JFrame {
                 //Update UI elements
                 saveButton.setEnabled(true);
                 savedInDBCheckBox.setSelected(false);
+                deleteButton.setEnabled(false);
             }
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
@@ -626,13 +635,9 @@ public class MainGui extends javax.swing.JFrame {
                 demo.setVisible( true );
             }
             
+         
             
-            
-//            System.out.println(demo.getClass().getName());
-//            plot.pack();
-//            RefineryUtilities.centerFrameOnScreen(plot);
-//            plot.setVisible(true);
-//            plot.display();
+
         }
 
     }//GEN-LAST:event_plotButtonActionPerformed
@@ -779,7 +784,7 @@ public void initializeData(){
             
             if (e.get(2).length() == 3){
                 //Extract iso 3 Name and full Name from parsed Data
-                Country country = new Country(e.get(2),e.get(0));
+                Country country = new Country(e.get(2),toCamelCase(e.get(0)));
                 countryList.add(country);
                 //if Country was not already in the DB  
                 if(!controllerCountry.isInTheDatabase(country)){
